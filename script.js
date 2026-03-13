@@ -159,4 +159,69 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+
+    // ─── LAZY YOUTUBE ───
+    const ytContainer = document.getElementById('ytContainer');
+    if (ytContainer) {
+        ytContainer.style.cursor = 'pointer';
+        ytContainer.addEventListener('click', () => {
+            const videoId = ytContainer.getAttribute('data-videoid');
+            const iframe = document.createElement('iframe');
+            iframe.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0';
+            iframe.title = 'Speeddansys ERP Demo';
+            iframe.setAttribute('frameborder', '0');
+            iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+            iframe.setAttribute('allowfullscreen', '');
+            iframe.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;border:none;';
+            ytContainer.innerHTML = '';
+            ytContainer.appendChild(iframe);
+        });
+    }
+
+
+    // ─── SCROLL PROGRESS BAR ───
+    const scrollProgress = document.getElementById('scrollProgress');
+    function updateScrollProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+        if (scrollProgress) scrollProgress.style.width = pct + '%';
+    }
+    window.addEventListener('scroll', updateScrollProgress, { passive: true });
+
+
+    // ─── BACK TO TOP ───
+    const backToTop = document.getElementById('backToTop');
+    if (backToTop) {
+        window.addEventListener('scroll', () => {
+            backToTop.classList.toggle('visible', window.scrollY > 400);
+        }, { passive: true });
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+
+
+    // ─── NAV SCROLL SPY ───
+    const spySections = document.querySelectorAll('section[id], header[id]');
+    const spyLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+
+    function updateScrollSpy() {
+        let current = '';
+        spySections.forEach(section => {
+            if (window.scrollY >= section.offsetTop - 120) {
+                current = section.id;
+            }
+        });
+        spyLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            link.classList.toggle('active', href === '#' + current);
+        });
+    }
+
+    window.addEventListener('scroll', updateScrollSpy, { passive: true });
+    updateScrollSpy();
+
+
 });
