@@ -102,30 +102,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    // ─── STATS COUNTER ───
-    let statsCounted = false;
-    function animateStats() {
-        if (statsCounted) return;
-        statsCounted = true;
-        document.querySelectorAll('.stat-number').forEach(el => {
-            const target = parseInt(el.getAttribute('data-target'));
-            const duration = 2000;
-            const step = target / (duration / 16);
-            let current = 0;
-            const counter = setInterval(() => {
-                current += step;
-                if (current >= target) { current = target; clearInterval(counter); }
-                el.textContent = target >= 1000 ? Math.floor(current).toLocaleString() : Math.floor(current);
-            }, 16);
-        });
-    }
-
-    const statsEl = document.querySelector('.stats-section');
-    if (statsEl) {
-        new IntersectionObserver(entries => {
-            entries.forEach(e => { if (e.isIntersecting) animateStats(); });
-        }, { threshold: 0.5 }).observe(statsEl);
-    }
 
 
     // ─── SCROLL ANIMATIONS ───
