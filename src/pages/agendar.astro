@@ -72,10 +72,10 @@ const API_BASE = 'https://speeddan-barberia.vercel.app/api/book';
             oninput="filterTenants(this.value)" />
         </div>
 
-        <div id="tenants-empty" style="display:none;text-align:center;padding:40px;background:#fff;color:#777;font-size:14px;">
+        <div id="tenants-empty" style="display:none;text-align:center;padding:40px;background:#fff;border:2px solid #e8e3dc;color:#777;font-size:14px;">
           No se encontraron negocios con ese nombre.
         </div>
-        <div id="tenants-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:2px;background:#e8e3dc;"></div>
+        <div id="tenants-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;background:transparent;"></div>
 
         <div style="margin-top:32px;text-align:right;">
           <button id="next-0" onclick="goTo(1)" disabled class="btn-gold" style="border:none;cursor:pointer;opacity:.4;"><span>Siguiente →</span></button>
@@ -100,10 +100,10 @@ const API_BASE = 'https://speeddan-barberia.vercel.app/api/book';
           <div id="cat-tabs" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
         </div>
 
-        <div id="services-empty" style="display:none;text-align:center;padding:40px;background:#fff;color:#777;font-size:14px;">
+        <div id="services-empty" style="display:none;text-align:center;padding:40px;background:#fff;border:2px solid #e8e3dc;color:#777;font-size:14px;">
           No se encontraron servicios con ese criterio.
         </div>
-        <div id="services-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:2px;background:#e8e3dc;margin-bottom:80px;"></div>
+        <div id="services-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;background:transparent;margin-bottom:80px;"></div>
 
         <!-- Barra sticky de selección -->
         <div id="services-bar" style="display:none;position:sticky;bottom:0;left:0;right:0;background:#222227;padding:16px 24px;z-index:50;box-shadow:0 -4px 24px rgba(0,0,0,.18);display:none;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
@@ -134,7 +134,7 @@ const API_BASE = 'https://speeddan-barberia.vercel.app/api/book';
       <div id="step-2" style="display:none;">
         <h2 style="font-family:'Prata',serif;font-size:1.8rem;color:#282828;margin:0 0 8px;">¿Con quién deseas tu cita?</h2>
         <p style="font-size:14px;color:#777;margin:0 0 28px;">Elige un profesional o deja que asignemos el disponible.</p>
-        <div id="barbers-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:2px;background:#e8e3dc;margin-bottom:80px;"></div>
+        <div id="barbers-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;background:transparent;margin-bottom:80px;"></div>
 
         <!-- Barra sticky barbero -->
         <div id="barbers-bar" style="display:none;position:sticky;bottom:0;background:#222227;padding:16px 24px;z-index:50;box-shadow:0 -4px 24px rgba(0,0,0,.18);align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
@@ -271,20 +271,29 @@ const API_BASE = 'https://speeddan-barberia.vercel.app/api/book';
   }
   .cat-tab:hover { border-color:#9e8a78;color:#9e8a78; }
   .cat-tab.active { background:#222227;color:#fff;border-color:#222227; }
-  .svc-card { background:#fff;padding:22px 20px;cursor:pointer;transition:all .2s;border-bottom:3px solid transparent;position:relative; }
-  .svc-card:hover { box-shadow:0 4px 20px rgba(158,138,120,.12); }
-  .svc-card.selected { border-bottom-color:#9e8a78;box-shadow:0 8px 32px rgba(158,138,120,.2); }
+  .svc-card {
+    background:#fff;padding:22px 20px;cursor:pointer;transition:all .25s;
+    border:2px solid #e8e3dc;border-radius:2px;position:relative;
+  }
+  .svc-card:hover { border-color:#9e8a78;box-shadow:0 4px 20px rgba(158,138,120,.13);transform:translateY(-1px); }
+  .svc-card.selected { border-color:#9e8a78;border-bottom-width:4px;box-shadow:0 8px 28px rgba(158,138,120,.2); }
   .svc-card .check-mark {
-    position:absolute;top:14px;right:14px;width:24px;height:24px;border-radius:50%;
+    position:absolute;top:12px;right:12px;width:24px;height:24px;border-radius:50%;
     background:#9e8a78;display:none;align-items:center;justify-content:center;
   }
   .svc-card.selected .check-mark { display:flex; }
-  .brb-card { background:#fff;padding:28px 16px;cursor:pointer;transition:all .2s;border-bottom:3px solid transparent;text-align:center; }
-  .brb-card:hover { box-shadow:0 4px 20px rgba(158,138,120,.12); }
-  .brb-card.selected { border-bottom-color:#9e8a78;box-shadow:0 8px 32px rgba(158,138,120,.2); }
-  .tenant-card { background:#fff;padding:28px 24px;cursor:pointer;transition:all .2s;border-bottom:3px solid transparent; }
-  .tenant-card:hover { box-shadow:0 4px 20px rgba(158,138,120,.12); }
-  .tenant-card.selected { border-bottom-color:#9e8a78;box-shadow:0 8px 32px rgba(158,138,120,.2); }
+  .brb-card {
+    background:#fff;padding:28px 16px;cursor:pointer;transition:all .25s;
+    border:2px solid #e8e3dc;border-radius:2px;text-align:center;
+  }
+  .brb-card:hover { border-color:#9e8a78;box-shadow:0 4px 20px rgba(158,138,120,.13);transform:translateY(-1px); }
+  .brb-card.selected { border-color:#9e8a78;border-bottom-width:4px;box-shadow:0 8px 28px rgba(158,138,120,.2); }
+  .tenant-card {
+    background:#fff;padding:28px 24px;cursor:pointer;transition:all .25s;
+    border:2px solid #e8e3dc;border-radius:2px;
+  }
+  .tenant-card:hover { border-color:#9e8a78;box-shadow:0 6px 24px rgba(158,138,120,.15);transform:translateY(-2px); }
+  .tenant-card.selected { border-color:#9e8a78;border-bottom-width:4px;box-shadow:0 8px 32px rgba(158,138,120,.22); }
 </style>
 
 <script define:vars={{ API_BASE }}>
@@ -379,20 +388,17 @@ const API_BASE = 'https://speeddan-barberia.vercel.app/api/book';
       : state.tenants;
 
     if (state.tenants.length === 0) {
-      grid.style.background = 'transparent';
-      grid.innerHTML = '<p style="padding:40px;text-align:center;color:#777;font-size:14px;background:#fff;">No hay negocios disponibles en este momento.</p>';
+      grid.innerHTML = '<p style="padding:40px;text-align:center;color:#777;font-size:14px;background:#fff;border:2px solid #e8e3dc;grid-column:1/-1;">No hay negocios disponibles en este momento.</p>';
       hide('tenants-empty');
       return;
     }
 
     if (list.length === 0) {
-      grid.style.background = 'transparent';
       show('tenants-empty');
       return;
     }
 
     hide('tenants-empty');
-    grid.style.background = '#e8e3dc';
 
     list.forEach(t => {
       const card = document.createElement('div');
@@ -512,11 +518,9 @@ const API_BASE = 'https://speeddan-barberia.vercel.app/api/book';
 
     if (list.length === 0) {
       show('services-empty');
-      grid.style.background = 'transparent';
       return;
     }
     hide('services-empty');
-    grid.style.background = '#e8e3dc';
 
     list.forEach(s => {
       const isSelected = state.servicesSelected.some(x => x.id === s.id);
