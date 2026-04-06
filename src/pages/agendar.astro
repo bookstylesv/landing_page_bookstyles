@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
-const API_BASE = 'https://speeddan-barberia.vercel.app/api/book';
+const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://speeddan-barberia.vercel.app/api/book';
 ---
 
 <Layout title="Agendar Cita — BookStyle" description="Reserva tu cita en el negocio que prefieras. Selecciona el salón o barbería, elige tu servicio y el horario disponible.">
@@ -709,9 +709,10 @@ const API_BASE = 'https://speeddan-barberia.vercel.app/api/book';
     hide('slots-legend');
     show('slots-loading');
     const slug = state.tenant.slug;
-    const primaryService = state.servicesSelected[0];
+    const primaryService  = state.servicesSelected[0];
+    const totalDuration   = state.servicesSelected.reduce((sum, s) => sum + (s.duration ?? 30), 0);
     try {
-      const params = new URLSearchParams({ date, serviceId: String(primaryService.id) });
+      const params = new URLSearchParams({ date, serviceId: String(primaryService.id), totalDuration: String(totalDuration) });
       if (state.barber && state.barber !== 'any') params.set('barberId', String(state.barber.id));
       const res = await fetch(`${API_BASE}/${slug}/slots?${params}`);
       const data = await res.json();
