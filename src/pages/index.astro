@@ -271,31 +271,74 @@ import Footer from '../components/Footer.astro';
         Planes adaptados al tamaño de tu negocio. Sin contratos largos. Sin letra pequeña.
       </p>
 
-      <div class="cards-grid-240 price-cards-wrap" style="margin-bottom:40px;text-align:left;">
-        {[
-          { plan: 'Básico', desc: 'Para negocios que arrancan', incluye: ['Agenda online', 'Hasta 2 profesionales', 'Control de caja básico', 'Soporte por WhatsApp'] },
-          { plan: 'Profesional', desc: 'Para negocios en crecimiento', incluye: ['Todo lo del Básico', 'Profesionales ilimitados', 'Inventario & Compras', 'Reportes & Analytics', 'Gestión de equipo'] },
-        ].map((p, i) => (
-          <div style={`background:${i===1?'#9e8a78':'#2d2d33'};padding:44px 36px;position:relative;`}>
-            {i===1 && <div style="position:absolute;top:0;left:0;right:0;background:#7d6b5e;text-align:center;padding:6px;font-family:'Work Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#fff;">Más popular</div>}
-            <div style={`padding-top:${i===1?'24px':'0'};`}>
-              <div style="font-family:'Work Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:8px;">{p.plan}</div>
-              <div style="font-family:'Prata',serif;font-size:1.8rem;color:#fff;margin-bottom:6px;">Consultar</div>
-              <div style="font-size:13px;color:rgba(255,255,255,.6);margin-bottom:28px;">{p.desc}</div>
-              <div style="display:flex;flex-direction:column;gap:10px;">
-                {p.incluye.map(item => (
-                  <div style="display:flex;align-items:center;gap:10px;">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                    <span style="font-size:14px;color:rgba(255,255,255,.85);">{item}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
+      <div class="price-cards-wrap" style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-bottom:48px;text-align:left;max-width:1040px;margin-left:auto;margin-right:auto;">
+
+        <!-- BÁSICO -->
+        <div style="background:#2d2d33;padding:44px 32px;position:relative;">
+          <div style="font-family:'Work Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:10px;">Básico</div>
+          <div style="display:flex;align-items:flex-end;gap:4px;margin-bottom:4px;">
+            <span style="font-family:'Prata',serif;font-size:2.4rem;color:#fff;">$34.99</span>
+            <span style="font-size:13px;color:rgba(255,255,255,.45);margin-bottom:8px;">/mes</span>
           </div>
-        ))}
+          <div style="font-size:13px;color:rgba(255,255,255,.5);margin-bottom:28px;padding-bottom:24px;border-bottom:1px solid rgba(255,255,255,.08);">Para negocios que arrancan</div>
+          <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:32px;">
+            {['1 barbería / salón','Hasta 3 profesionales','Agenda online','Control de caja básico','Gestión de clientes','Soporte por WhatsApp'].map(item => (
+              <div style="display:flex;align-items:center;gap:10px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9e8a78" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                <span style="font-size:13px;color:rgba(255,255,255,.8);">{item}</span>
+              </div>
+            ))}
+          </div>
+          <a href="#contacto" class="btn-outline" style="display:block;text-align:center;text-decoration:none;border-color:rgba(255,255,255,.25);color:#fff;font-size:11px;height:44px;line-height:44px;padding:0;">Solicitar demo</a>
+        </div>
+
+        <!-- PROFESIONAL -->
+        <div style="background:#9e8a78;padding:44px 32px;position:relative;">
+          <div style="position:absolute;top:0;left:0;right:0;background:#7d6b5e;text-align:center;padding:7px;font-family:'Work Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#fff;">Más popular</div>
+          <div style="padding-top:28px;">
+            <div style="font-family:'Work Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:10px;">Profesional</div>
+            <div style="display:flex;align-items:flex-end;gap:4px;margin-bottom:4px;">
+              <span style="font-family:'Prata',serif;font-size:2.4rem;color:#fff;">$69.99</span>
+              <span style="font-size:13px;color:rgba(255,255,255,.55);margin-bottom:8px;">/mes</span>
+            </div>
+            <div style="font-size:13px;color:rgba(255,255,255,.6);margin-bottom:28px;padding-bottom:24px;border-bottom:1px solid rgba(255,255,255,.15);">Para negocios en crecimiento</div>
+            <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:32px;">
+              {['Hasta 3 barberías / salones','Profesionales ilimitados','Todo lo del plan Básico','Inventario & Compras','Reportes & Analytics','Gestión de equipo'].map(item => (
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span style="font-size:13px;color:rgba(255,255,255,.9);">{item}</span>
+                </div>
+              ))}
+            </div>
+            <a href="#contacto" class="btn-gold" style="display:block;text-align:center;text-decoration:none;background:#fff;color:#222227;font-size:11px;height:44px;line-height:44px;padding:0;"><span>Solicitar demo</span></a>
+          </div>
+        </div>
+
+        <!-- ENTERPRISE -->
+        <div style="background:#1c1c21;padding:44px 32px;position:relative;border-top:2px solid #9e8a78;">
+          <div style="position:absolute;top:0;left:0;right:0;background:#9e8a78;text-align:center;padding:7px;font-family:'Work Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#fff;">Todo incluido</div>
+          <div style="padding-top:28px;">
+            <div style="font-family:'Work Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:10px;">Enterprise</div>
+            <div style="display:flex;align-items:flex-end;gap:4px;margin-bottom:4px;">
+              <span style="font-family:'Prata',serif;font-size:2.4rem;color:#fff;">$99.99</span>
+              <span style="font-size:13px;color:rgba(255,255,255,.45);margin-bottom:8px;">/mes</span>
+            </div>
+            <div style="font-size:13px;color:rgba(255,255,255,.5);margin-bottom:28px;padding-bottom:24px;border-bottom:1px solid rgba(255,255,255,.08);">Para cadenas y franquicias</div>
+            <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:32px;">
+              {['Hasta 10 barberías / salones','Todo lo del plan Profesional','Todos los módulos habilitados','Acceso prioritario a soporte','Configuración personalizada','Capacitación incluida'].map(item => (
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9e8a78" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span style="font-size:13px;color:rgba(255,255,255,.8);">{item}</span>
+                </div>
+              ))}
+            </div>
+            <a href="#contacto" class="btn-outline" style="display:block;text-align:center;text-decoration:none;border-color:rgba(255,255,255,.25);color:#fff;font-size:11px;height:44px;line-height:44px;padding:0;">Solicitar demo</a>
+          </div>
+        </div>
+
       </div>
 
-      <a href="#contacto" class="btn-gold" style="text-decoration:none;"><span>Consultar precio →</span></a>
+      <p style="font-size:13px;color:#666;">Todos los planes incluyen actualizaciones sin costo adicional. Sin permanencia.</p>
     </div>
   </section>
 
@@ -443,8 +486,11 @@ import Footer from '../components/Footer.astro';
   }
 
   /* ── Precios cards ── */
-  @media (max-width: 640px) {
-    .price-cards-wrap { grid-template-columns: 1fr !important; }
+  @media (max-width: 860px) {
+    .price-cards-wrap { grid-template-columns: 1fr !important; max-width: 420px !important; }
+  }
+  @media (min-width: 861px) and (max-width: 1060px) {
+    .price-cards-wrap { grid-template-columns: repeat(3,1fr) !important; }
   }
 
   /* ── Beneficios bullets ── */
