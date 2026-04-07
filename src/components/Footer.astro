@@ -1,8 +1,8 @@
 ---
 ---
 <footer style="background:#222227;color:#999;">
-  <div style="max-width:1200px;margin:0 auto;padding:80px 24px 0;">
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:48px;padding-bottom:60px;border-bottom:1px solid #333;">
+  <div style="max-width:1200px;margin:0 auto;padding:60px 24px 0;">
+    <div class="footer-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:40px;padding-bottom:48px;border-bottom:1px solid #333;">
 
       <!-- Columna 1: Marca -->
       <div>
@@ -96,9 +96,22 @@
     </div>
 
     <!-- Copyright -->
-    <div style="padding:24px 0;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;font-size:13px;">
+    <div class="footer-copy" style="padding:24px 0;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;font-size:13px;">
       <span>&copy; {new Date().getFullYear()} BookStyle. Todos los derechos reservados.</span>
       <span>Desarrollado por <span style="color:#9e8a78;">Speeddan System</span></span>
     </div>
   </div>
 </footer>
+
+<style>
+  @media (max-width: 640px) {
+    .footer-grid { gap: 28px; }
+  }
+  @media (max-width: 480px) {
+    .footer-copy {
+      flex-direction: column;
+      text-align: center;
+      gap: 6px;
+    }
+  }
+</style>
