@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(find /c/ProjectosDev/bookstyle-landing/src -name *.css -o -name tailwind.config.*)",
+      "Bash(git checkout:*)",
+      "Bash(npm run:*)",
+      "Bash(grep -oP '#[0-9a-fA-F]{3,8}|rgba?\\\\\\([^\\)]+\\\\\\)' src/pages/index.astro src/components/Header.astro src/components/Footer.astro src/layouts/Layout.astro)",
+      "Bash(grep -oE '#[0-9a-fA-F]{3,8}' src/pages/index.astro src/components/Header.astro src/components/Footer.astro src/layouts/Layout.astro)"
+    ]
+  }
+}

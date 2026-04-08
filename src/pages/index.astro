@@ -285,10 +285,10 @@ import Footer from '../components/Footer.astro';
         ].map((t, i) => (
           <div class="card-pad-lg" style="background:#fff;padding:44px 36px;"
             data-aos="zoom-in" data-aos-delay={String(i * 100)}>
-            <div style="font-family:'Prata',serif;font-size:3rem;color:#f0ebe3;line-height:1;margin-bottom:16px;">"</div>
+            <div style="font-family:'Prata',serif;font-size:3rem;color:var(--cream-dark);line-height:1;margin-bottom:16px;">"</div>
             <p style="font-size:15px;line-height:1.9;color:var(--text-dark-alt);margin:0 0 28px;">{t.texto}</p>
             <div style="display:flex;align-items:center;gap:14px;">
-              <div style={`width:48px;height:48px;border-radius:50%;background:${i%2===0?'#0a0a0a':'#9e8a78'};display:flex;align-items:center;justify-content:center;flex-shrink:0;`}>
+              <div style={`width:48px;height:48px;border-radius:50%;background:${i%2===0?'var(--black)':'var(--gold)'};display:flex;align-items:center;justify-content:center;flex-shrink:0;`}>
                 <span style="font-family:'Prata',serif;font-size:1.3rem;color:#fff;">{t.inicial}</span>
               </div>
               <div>
@@ -358,7 +358,7 @@ import Footer from '../components/Footer.astro';
         </div>
 
         <!-- ENTERPRISE -->
-        <div style="background:var(--black-rich);padding:44px 32px;position:relative;border-top:2px solid #9e8a78;" data-aos="fade-up" data-aos-delay="300">
+        <div style="background:var(--black-rich);padding:44px 32px;position:relative;border-top:2px solid var(--gold);" data-aos="fade-up" data-aos-delay="300">
           <div style="position:absolute;top:0;left:0;right:0;background:var(--gold);text-align:center;padding:7px;font-family:'Work Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#fff;">Todo incluido</div>
           <div style="padding-top:28px;">
             <div style="font-family:'Work Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:10px;">Enterprise</div>
@@ -501,7 +501,7 @@ import Footer from '../components/Footer.astro';
   }
 
   /* ── Grids de cards (features, demo, testimoniales, precios) ── */
-  .cards-grid-320 { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:2px; background:#f0ebe3; }
+  .cards-grid-320 { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:2px; background:var(--cream-dark); }
   .cards-grid-260 { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:2px; background:var(--cream-border); }
   .cards-grid-240 { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr));  gap:2px; }
   @media (max-width: 700px) {

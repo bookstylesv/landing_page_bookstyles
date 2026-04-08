@@ -105,23 +105,12 @@ const canonical = Astro.url.href;
   html { scroll-behavior: smooth; }
   *, *::before, *::after { box-sizing: border-box; }
 
-  /* ── SVG icon override: todos los iconos siguen --gold automáticamente ──
-     El selector encuentra los SVGs por su valor original (#9e8a78),
-     pero la propiedad CSS var(--gold) gana al atributo en el render.
-     Cuando cambias --gold arriba, todos los íconos se actualizan.    */
-  svg path[stroke="#9e8a78"],
-  svg line[stroke="#9e8a78"],
-  svg rect[stroke="#9e8a78"],
-  svg circle[stroke="#9e8a78"],
-  svg polyline[stroke="#9e8a78"],
-  svg polygon[stroke="#9e8a78"],
-  svg ellipse[stroke="#9e8a78"] { stroke: var(--gold) !important; }
-  svg path[fill="#9e8a78"],
-  svg circle[fill="#9e8a78"],
-  svg rect[fill="#9e8a78"]      { fill:   var(--gold) !important; }
-  /* Swiper pagination bullets */
-  .gallery-swiper .swiper-pagination-bullet,
-  .gallery-swiper .swiper-pagination-bullet-active { background: var(--gold); }
+  /* ── SVG icon override ──────────────────────────────────────────────────
+     El atributo stroke="#9e8a78" está en el elemento <svg> raíz (no en los hijos).
+     CSS stroke es heredado en SVG: sobreescribir el <svg> padre actualiza todo.
+     Cuando cambias --gold en :root, todos los íconos se actualizan automáticamente. */
+  svg[stroke="#9e8a78"] { stroke: var(--gold) !important; }
+  svg[fill="#9e8a78"]   { fill:   var(--gold) !important; }
 
   /* Botón principal estilo barbería */
   .btn-gold {
@@ -266,13 +255,13 @@ const canonical = Astro.url.href;
     bottom: 14px;
   }
   .gallery-swiper .swiper-pagination-bullet {
-    background: #9e8a78;
+    background: var(--gold);
     opacity: .45;
     width: 8px;
     height: 8px;
   }
   .gallery-swiper .swiper-pagination-bullet-active {
-    background: #9e8a78;
+    background: var(--gold);
     opacity: 1;
     width: 24px;
     border-radius: 4px;
