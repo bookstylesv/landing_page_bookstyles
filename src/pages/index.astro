@@ -11,24 +11,46 @@ import Footer from '../components/Footer.astro';
   <Header />
 
   <!-- ═══════════════════════════════════════
-       HERO
+       HERO CAROUSEL (estilo Web_Agricultura)
+       Cada slide = fondo completo + tag + h1 + p + CTAs
   ══════════════════════════════════════════ -->
-  <section id="inicio" style="position:relative;height:100vh;min-height:600px;display:flex;align-items:center;overflow:hidden;">
-    <div style="position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=1600&auto=format&fit=crop&q=80');background-size:cover;background-position:center;transform:scale(1.05);transition:transform 8s ease;"></div>
-    <div style="position:absolute;inset:0;background:linear-gradient(to right, rgba(var(--black-rgb),.95) 55%, rgba(var(--black-rgb),.65));"></div>
-
-    <div class="hero-content" style="position:relative;z-index:2;max-width:1200px;margin:0 auto;padding:80px 24px 0;">
-      <span class="section-label fade-up">Sistema ERP para Barberías y Salones</span>
-      <h1 class="fade-up delay-1" style="font-family:'Prata',serif;font-size:clamp(2rem,5.5vw,4.6rem);color:#fff;line-height:1.1;margin:0 0 24px;max-width:700px;">
-        El sistema que necesita<br>tu <span style="color:var(--gold);">barbería o salón</span>
-      </h1>
-      <p class="fade-up delay-2" style="font-size:clamp(14px,2.5vw,16px);color:#ddd;max-width:500px;line-height:1.9;margin:0 0 40px;">
-        BookStyle centraliza tu agenda, caja, inventario, clientes y equipo en un solo panel. Simple. Sin complicaciones.
-      </p>
-      <div class="fade-up delay-3 hero-ctas" style="display:flex;flex-wrap:wrap;gap:14px;">
-        <a href="#contacto" class="btn-gold" style="text-decoration:none;"><span>Solicitar Demo</span></a>
-        <a href="/agendar" class="btn-outline" style="text-decoration:none;">Ver Booking en vivo</a>
+  <section id="inicio" class="hero-carousel-section">
+    <div class="swiper hero-swiper">
+      <div class="swiper-wrapper">
+        {[
+          { src: 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=1600&auto=format&fit=crop&q=80', tag: 'Sistema ERP Profesional', h1: 'El sistema que necesita<br>tu <em>barbería o salón</em>', p: 'BookStyle centraliza tu agenda, caja, inventario y clientes en un solo panel. Simple. Sin complicaciones.' },
+          { src: 'https://images.unsplash.com/photo-1560066984-138daaa7fd3c?w=1600&auto=format&fit=crop&q=80', tag: 'Agenda Online 24/7', h1: 'Tus clientes agendan<br><em>cuando quieran</em>', p: 'Sin llamadas perdidas. Reservas en tiempo real desde cualquier dispositivo, a cualquier hora.' },
+          { src: 'https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=1600&auto=format&fit=crop&q=80', tag: 'Control de Caja', h1: 'Ventas y cierre de caja<br><em>en segundos</em>', p: 'Registra ventas, métodos de pago y comisiones por profesional. Historial completo cada día.' },
+          { src: 'https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=1600&auto=format&fit=crop&q=80', tag: 'Menos Papeles, Más Cortes', h1: 'Más tiempo cortando,<br><em>menos en papeles</em>', p: 'Deja de perder tiempo en administración manual. BookStyle automatiza todo por ti.' },
+          { src: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=1600&auto=format&fit=crop&q=80', tag: 'Spa & Wellness', h1: 'Para spas, salones<br><em>y centros de belleza</em>', p: 'BookStyle se adapta a cualquier tipo de negocio de belleza y bienestar.' },
+          { src: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=1600&auto=format&fit=crop&q=80', tag: 'Negocio Profesional', h1: 'Tu negocio merece un<br><em>sistema profesional</em>', p: 'Sin contratos largos ni letra pequeña. Solo herramientas que realmente funcionan.' },
+          { src: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=1600&auto=format&fit=crop&q=80', tag: 'Gestión Moderna', h1: 'Gestión moderna para<br><em>negocios exitosos</em>', p: 'Desde el primer cliente hasta el cierre del día, todo bajo control en un panel.' },
+          { src: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=1600&auto=format&fit=crop&q=80', tag: 'Inventario Inteligente', h1: 'Inventario siempre<br><em>bajo control</em>', p: 'Alertas de reorden automáticas, compras a proveedores y stock en tiempo real.' },
+          { src: 'https://images.unsplash.com/photo-1562322140-8baeececf3df?w=1600&auto=format&fit=crop&q=80', tag: 'Clientes Fieles', h1: 'Clientes que vuelven<br><em>una y otra vez</em>', p: 'Historial de visitas, preferencias y notas personalizadas para cada cliente.' },
+          { src: 'https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=1600&auto=format&fit=crop&q=80', tag: 'Analytics en Tiempo Real', h1: 'Reportes y métricas<br><em>en tiempo real</em>', p: 'Conoce tus servicios más populares, ingresos y el rendimiento de tu equipo.' },
+          { src: 'https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=1600&auto=format&fit=crop&q=80', tag: 'Gestión de Equipo', h1: 'Tu equipo siempre<br><em>organizado</em>', p: 'Agenda por profesional, control de comisiones y planilla en un solo lugar.' },
+          { src: 'https://images.unsplash.com/photo-1582095133179-bfd08e2585d8?w=1600&auto=format&fit=crop&q=80', tag: 'Sin Comisiones por Cita', h1: 'Precio fijo mensual,<br><em>sin sorpresas</em>', p: 'Agenda todas las citas que quieras. Nunca cobraremos comisión por cada reserva.' },
+          { src: 'https://images.unsplash.com/photo-1470259078422-826894b933aa?w=1600&auto=format&fit=crop&q=80', tag: 'Onboarding Rápido', h1: 'Listo en menos de<br><em>24 horas</em>', p: 'Te acompañamos en cada paso de la configuración para que empieces a funcionar rápido.' },
+          { src: 'https://images.unsplash.com/photo-1519415387722-a1c3bbef716c?w=1600&auto=format&fit=crop&q=80', tag: 'Soporte en Español', h1: 'Soporte humano<br><em>en tu idioma</em>', p: 'Atención personalizada para barberías y salones en El Salvador y Latinoamérica.' },
+          { src: 'https://images.unsplash.com/photo-1634449571010-02389ed0f9b0?w=1600&auto=format&fit=crop&q=80', tag: 'Demo Gratuita', h1: 'Empieza hoy con<br><em>una demo gratuita</em>', p: 'Conoce el sistema completo en acción. Sin compromiso. Sin tarjeta de crédito.' },
+          { src: 'https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=1600&auto=format&fit=crop&q=80', tag: 'Únete a BookStyle', h1: 'Cientos de negocios<br><em>ya confían en nosotros</em>', p: 'Únete a la comunidad de barberías y salones que ya transformaron su gestión.' },
+        ].map(slide => (
+          <div class="swiper-slide hero-slide" style={`background-image:url('${slide.src}')`}>
+            <div class="hero-slide-overlay">
+              <span class="hero-slide-tag">{slide.tag}</span>
+              <h1 set:html={slide.h1}></h1>
+              <p>{slide.p}</p>
+              <div class="hero-ctas" style="display:flex;flex-wrap:wrap;gap:14px;">
+                <a href="#contacto" class="btn-gold" style="text-decoration:none;"><span>Solicitar Demo</span></a>
+                <a href="/agendar" class="btn-outline" style="text-decoration:none;">Ver Booking en vivo</a>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
+      <div class="swiper-button-prev hero-nav-btn"></div>
+      <div class="swiper-button-next hero-nav-btn"></div>
+      <div class="swiper-pagination hero-pagination"></div>
     </div>
   </section>
 
@@ -207,54 +229,6 @@ import Footer from '../components/Footer.astro';
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════
-       GALERÍA — CARRUSEL
-  ══════════════════════════════════════════ -->
-  <section class="gallery-section">
-    <div style="max-width:1200px;margin:0 auto;padding:0 24px;margin-bottom:52px;" data-aos="fade-up">
-      <span class="section-label" style="display:block;text-align:center;">Nuestros espacios</span>
-      <h2 style="font-family:'Prata',serif;font-size:clamp(1.8rem,4vw,2.6rem);color:#fff;text-align:center;margin:0 0 14px;">
-        Barberías y salones que <span style="color:var(--gold);">eligen BookStyle</span>
-      </h2>
-      <div class="section-divider center"></div>
-      <p style="text-align:center;max-width:500px;margin:0 auto;font-size:15px;color:rgba(255,255,255,.55);line-height:1.9;">
-        Desde barberías clásicas hasta spas modernos — BookStyle se adapta a todo tipo de negocio de belleza.
-      </p>
-    </div>
-
-    <!-- Swiper infinito con 16 imágenes -->
-    <div class="swiper gallery-swiper">
-      <div class="swiper-wrapper">
-        {[
-          { src: 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=900&auto=format&fit=crop&q=80', label: 'Barbería Clásica' },
-          { src: 'https://images.unsplash.com/photo-1560066984-138daaa7fd3c?w=900&auto=format&fit=crop&q=80', label: 'Salón de Belleza' },
-          { src: 'https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=900&auto=format&fit=crop&q=80', label: 'Barbero Profesional' },
-          { src: 'https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=900&auto=format&fit=crop&q=80', label: 'Fade & Estilos' },
-          { src: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=900&auto=format&fit=crop&q=80', label: 'Spa & Wellness' },
-          { src: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=900&auto=format&fit=crop&q=80', label: 'Barbería Premium' },
-          { src: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=900&auto=format&fit=crop&q=80', label: 'Salón Moderno' },
-          { src: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=900&auto=format&fit=crop&q=80', label: 'Nail & Estética' },
-          { src: 'https://images.unsplash.com/photo-1562322140-8baeececf3df?w=900&auto=format&fit=crop&q=80', label: 'Coloración & Tinte' },
-          { src: 'https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=900&auto=format&fit=crop&q=80', label: 'Corte Profesional' },
-          { src: 'https://images.unsplash.com/photo-1605497788044-5a32c7078486?w=900&auto=format&fit=crop&q=80', label: 'Diseño de Barba' },
-          { src: 'https://images.unsplash.com/photo-1582095133179-bfd08e2585d8?w=900&auto=format&fit=crop&q=80', label: 'Peluquería Premium' },
-          { src: 'https://images.unsplash.com/photo-1470259078422-826894b933aa?w=900&auto=format&fit=crop&q=80', label: 'Estilismo' },
-          { src: 'https://images.unsplash.com/photo-1519415387722-a1c3bbef716c?w=900&auto=format&fit=crop&q=80', label: 'Tratamientos' },
-          { src: 'https://images.unsplash.com/photo-1634449571010-02389ed0f9b0?w=900&auto=format&fit=crop&q=80', label: 'Barbería Urbana' },
-          { src: 'https://images.unsplash.com/photo-1600334129128-685c5582fd35?w=900&auto=format&fit=crop&q=80', label: 'Spa Relajante' },
-        ].map(slide => (
-          <div class="swiper-slide">
-            <img src={slide.src} alt={slide.label} loading="lazy" />
-            <div class="slide-overlay">
-              <span style="font-family:'Work Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:4px;">BookStyle</span>
-              <span style="font-family:'Prata',serif;font-size:1.05rem;color:#fff;">{slide.label}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-      <div class="swiper-pagination"></div>
-    </div>
-  </section>
 
   <!-- ═══════════════════════════════════════
        TESTIMONIALES
@@ -478,27 +452,105 @@ import Footer from '../components/Footer.astro';
   @keyframes pulse { 0%,100%{opacity:.5} 50%{opacity:1} }
   .feature-card:hover .feature-accent { height: 100% !important; }
 
-  /* ── Sección galería: gradiente oscuro con toque del acento ── */
-  .gallery-section {
-    padding: 100px 0 60px;
+  /* ── Hero Carousel (estilo Web_Agricultura) ── */
+  .hero-carousel-section {
+    position: relative;
+    height: 100vh;
+    min-height: 600px;
     overflow: hidden;
-    background: linear-gradient(160deg,
-      rgba(var(--black-rgb), 1) 0%,
-      rgba(var(--gold-rgb), 0.12) 50%,
-      rgba(var(--black-rgb), 1) 100%
-    );
+  }
+  .hero-swiper { width: 100%; height: 100%; }
+  .hero-slide {
+    background-size: cover;
+    background-position: center;
+    height: 100%;
     position: relative;
   }
-  .gallery-section::before {
-    content: '';
+  .hero-slide-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(var(--black-rgb), 0.55);
-    pointer-events: none;
+    background: linear-gradient(135deg, rgba(var(--black-rgb),.90) 0%, rgba(var(--black-rgb),.28) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: clamp(24px, 8vw, 120px);
+    padding-top: 120px;
+    max-width: 860px;
   }
-  .gallery-section > * { position: relative; z-index: 1; }
+  .hero-slide-tag {
+    display: inline-block;
+    width: fit-content;
+    font-family: 'Work Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: rgba(var(--gold-rgb), .14);
+    border: 1px solid rgba(var(--gold-rgb), .32);
+    padding: 5px 16px;
+    border-radius: 100px;
+    margin-bottom: 22px;
+  }
+  .hero-slide-overlay h1 {
+    font-family: 'Prata', serif;
+    font-size: clamp(2rem, 5.5vw, 4.2rem);
+    color: #fff;
+    line-height: 1.12;
+    margin: 0 0 20px;
+    text-shadow: 0 2px 24px rgba(0,0,0,.35);
+  }
+  .hero-slide-overlay h1 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+  .hero-slide-overlay p {
+    font-size: clamp(14px, 2vw, 16px);
+    color: rgba(255,255,255,.82);
+    max-width: 500px;
+    line-height: 1.9;
+    margin: 0 0 36px;
+  }
+  /* Flechas de navegación */
+  .swiper-button-prev.hero-nav-btn,
+  .swiper-button-next.hero-nav-btn {
+    width: 52px !important;
+    height: 52px !important;
+    background: rgba(255,255,255,.12) !important;
+    border: 1px solid rgba(255,255,255,.28) !important;
+    border-radius: 50% !important;
+    backdrop-filter: blur(8px);
+    color: #fff !important;
+    margin-top: 0 !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+  }
+  .swiper-button-prev.hero-nav-btn::after,
+  .swiper-button-next.hero-nav-btn::after { font-size: 18px !important; }
+  .swiper-button-prev.hero-nav-btn:hover,
+  .swiper-button-next.hero-nav-btn:hover {
+    background: rgba(var(--gold-rgb), .35) !important;
+    border-color: rgba(var(--gold-rgb), .5) !important;
+  }
+  /* Paginación hero */
+  .hero-pagination { bottom: 28px !important; }
+  .hero-pagination .swiper-pagination-bullet {
+    background: rgba(255,255,255,.45) !important;
+    opacity: 1 !important;
+    width: 8px !important;
+    height: 8px !important;
+  }
+  .hero-pagination .swiper-pagination-bullet-active {
+    background: var(--gold) !important;
+    width: 26px !important;
+    border-radius: 4px !important;
+    transition: width .3s !important;
+  }
   @media (max-width: 768px) {
-    .gallery-section { padding: 60px 0 40px; }
+    .hero-slide-overlay {
+      padding: 80px 20px 40px;
+      max-width: 100%;
+    }
   }
 
   /* ── Módulos bar: scroll horizontal en móvil ── */
@@ -526,9 +578,10 @@ import Footer from '../components/Footer.astro';
     .section-pad { padding: 48px 16px !important; }
   }
 
-  /* ── Hero ── */
-  @media (max-width: 768px) {
-    .hero-content { padding-top: 60px !important; padding-left: 20px !important; padding-right: 20px !important; }
+  /* ── Hero CTAs en móvil ── */
+  @media (max-width: 480px) {
+    .hero-ctas { flex-direction: column !important; align-items: flex-start; }
+    .hero-ctas a { width: 100%; text-align: center; }
   }
 
   /* ── Grids de cards (features, demo, testimoniales, precios) ── */
@@ -580,33 +633,31 @@ import Footer from '../components/Footer.astro';
 </style>
 
 <script is:inline>
-  /* ── Swiper galería ──
-     is:inline mantiene el script en su posición en el HTML.
-     DOMContentLoaded se dispara DESPUÉS de que los scripts sincrónicos
-     del final del body (CDN Swiper/AOS) ya hayan sido ejecutados.
+  /* ── Swiper Hero Carousel ──
+     is:inline mantiene el script en posición en el HTML.
+     DOMContentLoaded se dispara DESPUÉS de los scripts sincrónicos CDN.
+     effect: 'fade' = crossfade suave entre slides fullscreen (estilo Web_Agricultura).
   */
   document.addEventListener('DOMContentLoaded', function () {
     if (window.Swiper) {
-      new window.Swiper('.gallery-swiper', {
+      new window.Swiper('.hero-swiper', {
         loop: true,
-        loopAdditionalSlides: 4,
-        speed: 700,
-        grabCursor: true,
+        speed: 1100,
+        effect: 'fade',
+        fadeEffect: { crossFade: true },
+        grabCursor: false,
         autoplay: {
-          delay: 2800,
+          delay: 4500,
           disableOnInteraction: false,
         },
+        navigation: {
+          prevEl: '.swiper-button-prev.hero-nav-btn',
+          nextEl: '.swiper-button-next.hero-nav-btn',
+        },
         pagination: {
-          el: '.swiper-pagination',
+          el: '.hero-pagination',
           clickable: true,
           dynamicBullets: true,
-        },
-        breakpoints: {
-          0:    { slidesPerView: 1.2,  spaceBetween: 10 },
-          480:  { slidesPerView: 1.8,  spaceBetween: 14 },
-          768:  { slidesPerView: 2.5,  spaceBetween: 16 },
-          1024: { slidesPerView: 3.4,  spaceBetween: 20 },
-          1280: { slidesPerView: 4.0,  spaceBetween: 20 },
         },
       });
     }

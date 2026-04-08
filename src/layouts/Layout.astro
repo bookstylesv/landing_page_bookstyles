@@ -227,45 +227,9 @@ const canonical = Astro.url.href;
     .wa-float svg { width: 22px; height: 22px; }
   }
 
-  /* ── Swiper galería custom ─────────────────────────── */
-  .gallery-swiper .swiper-slide {
-    position: relative;
-    overflow: hidden;
-    border-radius: 0;
-  }
-  .gallery-swiper .swiper-slide img {
-    width: 100%;
-    height: 420px;
-    object-fit: cover;
-    display: block;
-    transition: transform .6s ease;
-  }
-  .gallery-swiper .swiper-slide:hover img { transform: scale(1.05); }
-  .gallery-swiper .slide-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(var(--black-rgb),.88) 0%, rgba(var(--black-rgb),.05) 55%);
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-end;
-    padding: 24px 22px;
-  }
-  .gallery-swiper .swiper-pagination {
-    bottom: 14px;
-  }
-  .gallery-swiper .swiper-pagination-bullet {
-    background: var(--gold);
-    opacity: .45;
-    width: 8px;
-    height: 8px;
-  }
-  .gallery-swiper .swiper-pagination-bullet-active {
-    background: var(--gold);
-    opacity: 1;
-    width: 24px;
-    border-radius: 4px;
-    transition: width .3s;
+  /* ── Swiper hero: ocultar flechas en móvil pequeño ─── */
+  @media (max-width: 480px) {
+    .hero-nav-btn { display: none !important; }
   }
 
   /* Reduce motion */
