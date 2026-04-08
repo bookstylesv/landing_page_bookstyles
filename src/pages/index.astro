@@ -548,23 +548,31 @@ import Footer from '../components/Footer.astro';
   }
 </style>
 
-<script>
-  /* ── Swiper galería ── */
-  document.addEventListener('DOMContentLoaded', function() {
-    new (window as any).Swiper('.gallery-swiper', {
-      loop: true,
-      grabCursor: true,
-      centeredSlides: false,
-      autoplay: { delay: 3200, disableOnInteraction: false, pauseOnMouseEnter: true },
-      pagination: { el: '.swiper-pagination', clickable: true },
-      breakpoints: {
-        0:    { slidesPerView: 1.15, spaceBetween: 12 },
-        640:  { slidesPerView: 2.2,  spaceBetween: 16 },
-        1024: { slidesPerView: 3.2,  spaceBetween: 20 },
-      },
-    });
+<script is:inline>
+  /* ── Swiper galería ──
+     is:inline mantiene el script en su posición en el HTML.
+     DOMContentLoaded se dispara DESPUÉS de que los scripts sincrónicos
+     del final del body (CDN Swiper/AOS) ya hayan sido ejecutados.
+  */
+  document.addEventListener('DOMContentLoaded', function () {
+    if (window.Swiper) {
+      new window.Swiper('.gallery-swiper', {
+        loop: true,
+        grabCursor: true,
+        autoplay: { delay: 3200, disableOnInteraction: false, pauseOnMouseEnter: true },
+        pagination: { el: '.swiper-pagination', clickable: true },
+        breakpoints: {
+          0:    { slidesPerView: 1.15, spaceBetween: 12 },
+          640:  { slidesPerView: 2.2,  spaceBetween: 16 },
+          1024: { slidesPerView: 3.2,  spaceBetween: 20 },
+        },
+      });
+    }
   });
 
+</script>
+
+<script>
   /* ── Formulario lead → WhatsApp ── */
   const BOOKSTYLE_WA = '50300000000'; // TODO: reemplazar con número real de WhatsApp de BookStyle
 

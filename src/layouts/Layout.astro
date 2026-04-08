@@ -42,12 +42,17 @@ const canonical = Astro.url.href;
     </svg>
   </a>
 
-  <!-- Swiper JS -->
+  <!-- Swiper JS — cargado al final del body (sincrónico, disponible en DOMContentLoaded) -->
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <!-- AOS JS -->
   <script src="https://unpkg.com/aos@3/dist/aos.js"></script>
-  <script>
-    AOS.init({ duration: 700, once: true, offset: 60, easing: 'ease-out-cubic' });
+  <!-- AOS init — is:inline garantiza que corre DESPUÉS de los CDN de arriba y de forma sincrónica -->
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', function () {
+      if (window.AOS) {
+        AOS.init({ duration: 700, once: true, offset: 60, easing: 'ease-out-cubic' });
+      }
+    });
   </script>
 </body>
 </html>
@@ -132,7 +137,7 @@ const canonical = Astro.url.href;
   }
   .section-divider.center { margin-left: auto; margin-right: auto; }
 
-  /* Hero animations (CSS, se disparan al cargar) */
+  /* Hero animations (CSS, se disparan al cargar sin scroll) */
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(24px); }
     to   { opacity: 1; transform: translateY(0); }
@@ -144,7 +149,7 @@ const canonical = Astro.url.href;
   .delay-4 { animation-delay: .4s; }
   .delay-5 { animation-delay: .5s; }
 
-  /* ── Responsive global ─────────────────────────────── */
+  /* Responsive global */
   @media (max-width: 768px) {
     .btn-gold  { font-size: 11px; padding: 0 20px; height: 44px; line-height: 44px; }
     .btn-outline { font-size: 11px; padding: 0 20px; height: 44px; line-height: 40px; }
@@ -171,8 +176,12 @@ const canonical = Astro.url.href;
     .wa-float svg { width: 22px; height: 22px; }
   }
 
-  /* Swiper galería custom */
-  .gallery-swiper .swiper-slide { position: relative; overflow: hidden; }
+  /* ── Swiper galería custom ─────────────────────────── */
+  .gallery-swiper .swiper-slide {
+    position: relative;
+    overflow: hidden;
+    border-radius: 0;
+  }
   .gallery-swiper .swiper-slide img {
     width: 100%;
     height: 420px;
@@ -181,16 +190,32 @@ const canonical = Astro.url.href;
     transition: transform .6s ease;
   }
   .gallery-swiper .swiper-slide:hover img { transform: scale(1.05); }
-  .gallery-swiper .swiper-slide .slide-overlay {
+  .gallery-swiper .slide-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to top, rgba(10,10,10,.85) 0%, rgba(10,10,10,.1) 60%);
+    background: linear-gradient(to top, rgba(10,10,10,.88) 0%, rgba(10,10,10,.05) 55%);
     display: flex;
-    align-items: flex-end;
-    padding: 24px 20px;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding: 24px 22px;
   }
-  .gallery-swiper .swiper-pagination-bullet { background: #9e8a78; opacity: .5; }
-  .gallery-swiper .swiper-pagination-bullet-active { background: #9e8a78; opacity: 1; }
+  .gallery-swiper .swiper-pagination {
+    bottom: 14px;
+  }
+  .gallery-swiper .swiper-pagination-bullet {
+    background: #9e8a78;
+    opacity: .45;
+    width: 8px;
+    height: 8px;
+  }
+  .gallery-swiper .swiper-pagination-bullet-active {
+    background: #9e8a78;
+    opacity: 1;
+    width: 24px;
+    border-radius: 4px;
+    transition: width .3s;
+  }
 
   /* Reduce motion */
   @media (prefers-reduced-motion: reduce) {
