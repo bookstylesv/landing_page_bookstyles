@@ -463,8 +463,10 @@ import Footer from '../components/Footer.astro';
   .hero-slide {
     background-size: cover;
     background-position: center;
+    width: 100%;
     height: 100%;
     position: relative;
+    flex-shrink: 0;
   }
   .hero-slide-overlay {
     position: absolute;
@@ -642,12 +644,11 @@ import Footer from '../components/Footer.astro';
     if (window.Swiper) {
       new window.Swiper('.hero-swiper', {
         loop: true,
-        speed: 1100,
-        effect: 'fade',
-        fadeEffect: { crossFade: true },
-        grabCursor: false,
+        slidesPerView: 1,
+        spaceBetween: 0,
+        speed: 900,
         autoplay: {
-          delay: 4500,
+          delay: 3800,
           disableOnInteraction: false,
         },
         navigation: {
