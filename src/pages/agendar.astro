@@ -60,7 +60,14 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://speeddan-barberia.v
       <!-- ══ PASO 0: NEGOCIO ══ -->
       <div id="step-0" style="display:none;">
         <h2 style="font-family:'Prata',serif;font-size:1.8rem;color:var(--text-dark);margin:0 0 8px;">¿A qué negocio deseas ir?</h2>
-        <p style="font-size:14px;color:#777;margin:0 0 24px;">Selecciona la barbería o salón de belleza que quieres visitar.</p>
+        <p style="font-size:14px;color:#777;margin:0 0 20px;">Selecciona la barbería o salón de belleza que quieres visitar.</p>
+
+        <!-- Filtro por tipo de negocio -->
+        <div id="type-tabs" style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;">
+          <button class="type-tab active" data-type="ALL"      onclick="setTypeFilter('ALL')">Todos</button>
+          <button class="type-tab"        data-type="BARBERIA" onclick="setTypeFilter('BARBERIA')">💈 Barberías</button>
+          <button class="type-tab"        data-type="SALON"    onclick="setTypeFilter('SALON')">✂️ Salones</button>
+        </div>
 
         <!-- Buscador negocios -->
         <div style="position:relative;margin-bottom:24px;max-width:460px;">
@@ -320,6 +327,14 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://speeddan-barberia.v
   .cat-tab:hover { border-color:var(--gold);color:var(--gold); }
   .cat-tab.active { background:var(--black);color:#fff;border-color:var(--black); }
 
+  /* ── Filtro tipo de negocio ── */
+  .type-tab {
+    font-family:'Work Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;
+    padding:8px 18px;border:1.5px solid #e0dbd4;background:#fff;cursor:pointer;transition:all .2s;white-space:nowrap;
+  }
+  .type-tab:hover { border-color:var(--gold);color:var(--gold); }
+  .type-tab.active { background:var(--black);color:#fff;border-color:var(--black); }
+
   /* ── Tarjeta negocio ── */
   .tenant-card {
     background:#fff;padding:28px 24px;cursor:pointer;transition:background .2s,box-shadow .2s;
@@ -378,6 +393,7 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://speeddan-barberia.v
     date:             '',
     time:             '',
     activeCat:        'Todos',
+    activeType:       'ALL',
   };
 
   /* ── Helpers ────────────────────────────────────────── */
@@ -455,9 +471,12 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://speeddan-barberia.v
     grid.innerHTML = '';
 
     const q = filter.toLowerCase().trim();
-    const list = q
+    const byText = q
       ? state.tenants.filter(t => t.name?.toLowerCase().includes(q) || t.city?.toLowerCase().includes(q))
       : state.tenants;
+    const list = state.activeType === 'ALL'
+      ? byText
+      : byText.filter(t => t.businessType === state.activeType);
 
     if (state.tenants.length === 0) {
       grid.innerHTML = '<p style="padding:40px;text-align:center;color:#777;font-size:14px;background:#fff;border:2px solid var(--border-light);grid-column:1/-1;">No hay negocios disponibles en este momento.</p>';
@@ -532,6 +551,15 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://speeddan-barberia.v
     renderTenants(val);
   }
   window.filterTenants = filterTenants;
+
+  function setTypeFilter(type) {
+    state.activeType = type;
+    document.querySelectorAll('.type-tab').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.type === type);
+    });
+    renderTenants($('search-tenant')?.value ?? '');
+  }
+  window.setTypeFilter = setTypeFilter;
 
   /* ── Banner negocio ─────────────────────────────────── */
   function renderTenantBanner() {
