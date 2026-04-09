@@ -140,7 +140,21 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://speeddan-barberia.v
       <div id="step-3" style="display:none;">
         <h2 style="font-family:'Prata',serif;font-size:1.8rem;color:var(--text-dark);margin:0 0 8px;">Elige fecha y hora</h2>
         <p style="font-size:14px;color:#777;margin:0 0 24px;">Selecciona el día y horario disponible.</p>
-        <div id="date-strip" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:12px;margin-bottom:32px;scrollbar-width:thin;"></div>
+        <!-- Calendario -->
+        <div id="date-calendar" style="margin-bottom:32px;">
+          <!-- Encabezado mes -->
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+            <button id="cal-prev" onclick="calMove(-1)" style="background:none;border:1.5px solid #e0dbd4;cursor:pointer;width:36px;height:36px;display:flex;align-items:center;justify-content:center;transition:border-color .2s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='#e0dbd4'">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <span id="cal-title" style="font-family:'Prata',serif;font-size:1.1rem;color:var(--text-dark);"></span>
+            <button id="cal-next" onclick="calMove(1)"  style="background:none;border:1.5px solid #e0dbd4;cursor:pointer;width:36px;height:36px;display:flex;align-items:center;justify-content:center;transition:border-color .2s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='#e0dbd4'">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+          <!-- Grid días -->
+          <div id="cal-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;"></div>
+        </div>
         <div id="slots-wrap" style="display:none;">
           <h4 style="font-family:'Work Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text-dark);margin:0 0 16px;">Horarios disponibles</h4>
           <div id="slots-loading" style="display:none;text-align:center;padding:24px;">
@@ -304,6 +318,26 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://speeddan-barberia.v
     #step-5 > div:last-of-type button { width:100% !important; justify-content:center !important; }
     #wa-notify { justify-content:center !important; width:100% !important; }
   }
+
+  /* ── Calendario ── */
+  .cal-day {
+    aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    border:1px solid #e0dbd4;background:#fff;cursor:pointer;transition:all .2s;
+    font-family:'Work Sans',sans-serif;font-size:13px;font-weight:600;color:var(--text-dark);
+    position:relative;gap:2px;
+  }
+  .cal-day:hover:not(.cal-past):not(.cal-empty) { border-color:var(--gold);color:var(--gold); }
+  .cal-day.cal-today { border-color:var(--gold); }
+  .cal-day.cal-today::after { content:'HOY';position:absolute;bottom:4px;font-size:7px;letter-spacing:1px;color:var(--gold);font-weight:700; }
+  .cal-day.cal-selected { background:var(--black);border-color:var(--black);color:#fff; }
+  .cal-day.cal-selected::after { color:var(--gold); }
+  .cal-day.cal-past { background:#f9f9f9;color:#ccc;cursor:not-allowed;border-color:#f0f0f0; }
+  .cal-day.cal-empty { border:none;background:transparent;cursor:default; }
+  .cal-dow {
+    font-family:'Work Sans',sans-serif;font-size:9px;font-weight:700;letter-spacing:1.5px;
+    text-transform:uppercase;color:var(--gold);text-align:center;padding:6px 0;
+  }
+  @media (max-width:480px) { .cal-day { font-size:11px; } .cal-day.cal-today::after { display:none; } }
 
   /* ── Slots ── */
   .slot-btn {
@@ -679,49 +713,99 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://speeddan-barberia.v
   }
   window.filterServices = filterServices;
 
-  /* ── Paso 3: Fechas ─────────────────────────────────── */
+  /* ── Paso 3: Calendario ─────────────────────────────── */
+  let calYear  = 0;
+  let calMonth = 0;
+
   function renderDateStrip() {
-    const strip = $('date-strip');
-    strip.innerHTML = '';
+    // Alias: inicializa el calendario con el mes actual
+    const now = new Date();
+    calYear  = now.getFullYear();
+    calMonth = now.getMonth();
     state.date = '';
     state.time = '';
     const btn3 = $('next-3');
     btn3.disabled = true;
     btn3.style.opacity = '.4';
     hide('slots-wrap');
+    renderCalendar();
+  }
 
-    const today  = new Date();
-    const days   = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
-    const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  function calMove(delta) {
+    calMonth += delta;
+    if (calMonth > 11) { calMonth = 0; calYear++; }
+    if (calMonth < 0)  { calMonth = 11; calYear--; }
+    renderCalendar();
+  }
+  window.calMove = calMove;
 
-    for (let i = 0; i < 14; i++) {
-      const d = new Date(today);
-      d.setDate(today.getDate() + i);
-      const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  function renderCalendar() {
+    const grid   = $('cal-grid');
+    const title  = $('cal-title');
+    if (!grid) return;
 
-      const btn = document.createElement('button');
-      btn.style.cssText = 'min-width:64px;padding:10px 8px;background:#fff;border:1px solid #e0dbd4;cursor:pointer;transition:all .2s;flex-shrink:0;text-align:center;';
-      btn.innerHTML = `
-        <div style="font-family:'Work Sans',sans-serif;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:#aaa;margin-bottom:4px;">${i===0?'HOY':days[d.getDay()]}</div>
-        <div style="font-family:'Prata',serif;font-size:1.3rem;color:var(--text-dark);line-height:1;">${d.getDate()}</div>
-        <div style="font-family:'Work Sans',sans-serif;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--gold);margin-top:2px;">${months[d.getMonth()]}</div>`;
-      btn.addEventListener('click', async () => {
-        state.date = key;
-        state.time = '';
-        btn3.disabled = true;
-        btn3.style.opacity = '.4';
-        strip.querySelectorAll('button').forEach(b => {
-          b.style.background = '#fff';
-          b.style.borderColor = '#e0dbd4';
-          b.querySelectorAll('div').forEach((el,j) => el.style.color = j===2 ? 'var(--gold)' : j===1 ? 'var(--text-dark)' : '#aaa');
+    const months  = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    const dows    = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+    const today   = new Date();
+    const todayKey = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+
+    title.textContent = `${months[calMonth]} ${calYear}`;
+
+    // Bloquear botón "anterior" si ya estamos en el mes actual o pasado
+    const prevBtn = $('cal-prev');
+    const isPastMonth = calYear < today.getFullYear() || (calYear === today.getFullYear() && calMonth <= today.getMonth());
+    prevBtn.style.opacity  = isPastMonth ? '.3' : '1';
+    prevBtn.style.cursor   = isPastMonth ? 'not-allowed' : 'pointer';
+    prevBtn.disabled       = isPastMonth;
+
+    grid.innerHTML = '';
+
+    // Cabeceras días
+    dows.forEach(d => {
+      const el = document.createElement('div');
+      el.className = 'cal-dow';
+      el.textContent = d;
+      grid.appendChild(el);
+    });
+
+    // Primer día del mes
+    const firstDay = new Date(calYear, calMonth, 1).getDay();
+    // Relleno vacío al inicio
+    for (let i = 0; i < firstDay; i++) {
+      const empty = document.createElement('div');
+      empty.className = 'cal-day cal-empty';
+      grid.appendChild(empty);
+    }
+
+    const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      const key = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+      const cellDate = new Date(calYear, calMonth, day);
+      const isPast   = cellDate < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+      const cell = document.createElement('div');
+      cell.className = 'cal-day';
+      if (isPast)          cell.classList.add('cal-past');
+      if (key === todayKey) cell.classList.add('cal-today');
+      if (key === state.date) cell.classList.add('cal-selected');
+
+      cell.textContent = day;
+
+      if (!isPast) {
+        cell.addEventListener('click', async () => {
+          state.date = key;
+          state.time = '';
+          const btn3 = $('next-3');
+          btn3.disabled = true;
+          btn3.style.opacity = '.4';
+          // Re-renderizar para marcar seleccionado
+          renderCalendar();
+          await fetchSlots(key);
         });
-        btn.style.background = 'var(--black)';
-        btn.style.borderColor = 'var(--black)';
-        btn.querySelectorAll('div').forEach(el => el.style.color = '#fff');
-        btn.querySelectorAll('div')[2].style.color = 'var(--gold)';
-        await fetchSlots(key);
-      });
-      strip.appendChild(btn);
+      }
+
+      grid.appendChild(cell);
     }
   }
 
