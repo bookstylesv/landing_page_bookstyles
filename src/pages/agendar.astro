@@ -7,8 +7,6 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://speeddan-barberia.v
 ---
 
 <Layout title="Agendar Cita — BookStyle" description="Reserva tu cita en el negocio que prefieras. Selecciona el salón o barbería, elige tu servicio y el horario disponible.">
-  <!-- Flatpickr — solo en esta página -->
-  <link slot="head" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" />
   <Header />
 
   <!-- Hero -->
@@ -142,9 +140,27 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://speeddan-barberia.v
       <div id="step-3" style="display:none;">
         <h2 style="font-family:'Prata',serif;font-size:1.8rem;color:var(--text-dark);margin:0 0 8px;">Elige fecha y hora</h2>
         <p style="font-size:14px;color:#777;margin:0 0 24px;">Selecciona el día y horario disponible.</p>
-        <!-- Flatpickr inline -->
-        <div id="date-calendar" style="margin-bottom:32px;width:100%;">
-          <input id="fp-input" type="text" style="display:none;" readonly />
+        <!-- Calendario custom -->
+        <div id="date-calendar" style="margin-bottom:32px;">
+          <!-- Header: mes + flechas -->
+          <div id="cal-header" style="display:flex;align-items:center;justify-content:space-between;background:var(--gold);padding:18px 20px;">
+            <button id="cal-prev" onclick="calMove(-1)" aria-label="Mes anterior"
+              style="background:none;border:none;cursor:pointer;color:#fff;display:flex;align-items:center;padding:4px 8px;opacity:.85;transition:opacity .2s;"
+              onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.85'">
+              <svg width="10" height="18" viewBox="0 0 10 18" fill="none"><polyline points="9,1 1,9 9,17" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div style="text-align:center;">
+              <div id="cal-month-name" style="font-family:'Work Sans',sans-serif;font-size:14px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#fff;line-height:1;"></div>
+              <div id="cal-year-num"   style="font-family:'Work Sans',sans-serif;font-size:11px;font-weight:500;color:rgba(255,255,255,.80);margin-top:3px;letter-spacing:1px;"></div>
+            </div>
+            <button id="cal-next" onclick="calMove(1)" aria-label="Siguiente mes"
+              style="background:none;border:none;cursor:pointer;color:#fff;display:flex;align-items:center;padding:4px 8px;opacity:.85;transition:opacity .2s;"
+              onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.85'">
+              <svg width="10" height="18" viewBox="0 0 10 18" fill="none"><polyline points="1,1 9,9 1,17" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+          <!-- Grid -->
+          <div id="cal-grid" style="background:#fff;border:1.5px solid var(--border-light);border-top:none;"></div>
         </div>
         <div id="slots-wrap" style="display:none;">
           <h4 style="font-family:'Work Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text-dark);margin:0 0 16px;">Horarios disponibles</h4>
@@ -243,9 +259,6 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://speeddan-barberia.v
   </section>
 
   <Footer />
-
-  <!-- Flatpickr JS — is:inline evita defer de Astro -->
-  <script is:inline src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </Layout>
 
 <style is:global>
@@ -313,85 +326,45 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://speeddan-barberia.v
     #wa-notify { justify-content:center !important; width:100% !important; }
   }
 
-  /* ── Flatpickr theme BookStyle — responsive full-width ── */
-
-  /* Contenedor principal: ocupa todo el ancho del padre */
-  #date-calendar { display:block !important; }
-  .flatpickr-calendar.inline {
-    position:static !important; display:block !important; visibility:visible !important;
-    opacity:1 !important; top:auto !important;
-    background:#fff !important;
-    border:1.5px solid var(--border-light) !important;
-    border-radius:0 !important;
-    box-shadow:0 8px 32px rgba(0,0,0,.10) !important;
-    font-family:'Work Sans',sans-serif !important;
-    /* FULL WIDTH — ningún max-width propio */
-    width:100% !important; max-width:100% !important; min-width:0 !important;
+  /* ── Calendario custom BookStyle ── */
+  #cal-grid {
+    display:grid;
+    grid-template-columns:repeat(7, 1fr);
   }
-
-  /* La cadena interna que Flatpickr fija en px */
-  .flatpickr-calendar.inline .flatpickr-innerContainer,
-  .flatpickr-calendar.inline .flatpickr-rContainer,
-  .flatpickr-calendar.inline .flatpickr-days,
-  .flatpickr-calendar.inline .dayContainer {
-    width:100% !important; max-width:100% !important; min-width:0 !important;
+  .cal-dow {
+    font-family:'Work Sans',sans-serif;font-size:10px;font-weight:700;
+    letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);
+    text-align:center;padding:14px 0 10px;
+    border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);
   }
-
-  /* Cabecera — mes/año */
-  .flatpickr-months { background:var(--black) !important; padding:14px 12px !important; }
-  .flatpickr-month  { color:#fff !important; fill:#fff !important; }
-  .flatpickr-current-month {
-    font-family:'Prata',serif !important; font-size:1.15rem !important;
-    color:#fff !important; padding:0 !important; width:auto !important;
+  .cal-dow:last-child { border-right:none; }
+  .cal-cell {
+    font-family:'Work Sans',sans-serif;font-size:15px;font-weight:500;
+    color:var(--text-dark);text-align:center;
+    padding:16px 4px;border-right:1px solid var(--border-light);border-bottom:1px solid var(--border-light);
+    cursor:pointer;transition:background .15s, color .15s;
+    position:relative;line-height:1;
+    min-height:56px;display:flex;align-items:center;justify-content:center;
   }
-  .flatpickr-current-month .flatpickr-monthDropdown-months {
-    color:#fff !important; background:var(--black) !important;
-    font-family:'Prata',serif !important; font-size:1.1rem !important;
+  .cal-cell:last-child,.cal-cell:nth-child(7n) { border-right:none; }
+  .cal-cell.cal-empty  { background:#fafafa;cursor:default; }
+  .cal-cell.cal-past   { color:#ccc;background:#fafafa;cursor:not-allowed; }
+  .cal-cell.cal-other  { color:#ccc; }
+  .cal-cell.cal-today:not(.cal-past) { font-weight:800;color:var(--gold); }
+  .cal-cell.cal-today:not(.cal-past)::after {
+    content:'';position:absolute;bottom:6px;left:50%;transform:translateX(-50%);
+    width:4px;height:4px;border-radius:50%;background:var(--gold);
   }
-  .flatpickr-current-month input.cur-year {
-    color:#fff !important; font-family:'Work Sans',sans-serif !important; font-weight:700 !important;
-    font-size:1rem !important;
+  .cal-cell:not(.cal-past):not(.cal-empty):hover {
+    background:var(--cream);color:var(--gold);
   }
-  .flatpickr-prev-month svg, .flatpickr-next-month svg { fill:#fff !important; }
-  .flatpickr-prev-month:hover svg, .flatpickr-next-month:hover svg { fill:var(--gold) !important; }
-
-  /* Días de la semana */
-  .flatpickr-weekdays { background:var(--black) !important; padding-bottom:10px !important; width:100% !important; }
-  .flatpickr-weekday  {
-    color:var(--gold) !important; font-family:'Work Sans',sans-serif !important;
-    font-size:10px !important; font-weight:700 !important; letter-spacing:1.5px !important;
-    flex:1 !important;
+  .cal-cell.cal-selected:not(.cal-past) {
+    background:var(--gold);color:#fff;font-weight:700;
   }
-
-  /* Celdas de día: usar flex:1 para que rellenen el ancho disponible */
-  .flatpickr-day {
-    font-family:'Work Sans',sans-serif !important; font-weight:600 !important; font-size:13px !important;
-    border-radius:0 !important; border:1px solid transparent !important;
-    color:var(--text-dark) !important; transition:all .15s !important;
-    flex:1 !important; max-width:none !important;
-    /* altura proporcional al ancho calculado por flex */
-    height:42px !important; line-height:42px !important;
-  }
-  .flatpickr-day:hover:not(.flatpickr-disabled):not(.prevMonthDay):not(.nextMonthDay) {
-    background:var(--cream) !important; border-color:var(--gold) !important; color:var(--gold) !important;
-  }
-  .flatpickr-day.today        { border-color:var(--gold) !important; font-weight:700 !important; }
-  .flatpickr-day.today:hover  { background:var(--gold) !important; color:#fff !important; }
-  .flatpickr-day.selected, .flatpickr-day.selected:hover {
-    background:var(--black) !important; border-color:var(--black) !important;
-    color:#fff !important; box-shadow:inset 3px 0 0 var(--gold) !important;
-  }
-  .flatpickr-day.flatpickr-disabled,
-  .flatpickr-day.prevMonthDay,
-  .flatpickr-day.nextMonthDay {
-    color:#ccc !important; background:#f9f9f9 !important;
-    cursor:not-allowed !important; opacity:1 !important;
-  }
-
+  .cal-cell.cal-selected:not(.cal-past)::after { display:none; }
   @media (max-width:480px) {
-    .flatpickr-day { font-size:11px !important; height:36px !important; line-height:36px !important; }
-    .flatpickr-weekday { font-size:9px !important; letter-spacing:0.5px !important; }
-    .flatpickr-current-month { font-size:1rem !important; }
+    .cal-cell  { font-size:12px;padding:10px 2px;min-height:40px; }
+    .cal-dow   { font-size:8px;padding:10px 0 8px;letter-spacing:.5px; }
   }
 
   /* ── Slots ── */
@@ -768,52 +741,120 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://speeddan-barberia.v
   }
   window.filterServices = filterServices;
 
-  /* ── Paso 3: Flatpickr inline ───────────────────────── */
-  let fpInstance = null;
+  /* ── Paso 3: Calendario custom ──────────────────────── */
+  const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
+                 'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  const DOWS  = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+
+  let calYear = 0, calMonth = 0;
 
   function renderDateStrip() {
+    const now   = new Date();
+    calYear  = now.getFullYear();
+    calMonth = now.getMonth();
     state.date = '';
     state.time = '';
     const btn3 = $('next-3');
-    btn3.disabled = true;
+    btn3.disabled    = true;
     btn3.style.opacity = '.4';
     hide('slots-wrap');
+    renderCalendar();
+  }
 
-    // Destruir instancia previa si existe
-    if (fpInstance) { fpInstance.destroy(); fpInstance = null; }
+  function calMove(delta) {
+    const now = new Date();
+    const ny  = calMonth + delta < 0  ? calYear - 1 : calMonth + delta > 11 ? calYear + 1 : calYear;
+    const nm  = (calMonth + delta + 12) % 12;
+    // No retroceder al pasado
+    if (ny < now.getFullYear() || (ny === now.getFullYear() && nm < now.getMonth())) return;
+    calYear  = ny;
+    calMonth = nm;
+    renderCalendar();
+  }
+  window.calMove = calMove;
 
-    fpInstance = flatpickr('#fp-input', {
-      inline:     true,
-      minDate:    'today',
-      maxDate:    new Date().fp_incr(90),
-      locale: {
-        firstDayOfWeek: 0,
-        weekdays: {
-          shorthand: ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'],
-          longhand:  ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'],
-        },
-        months: {
-          shorthand: ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'],
-          longhand:  ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
-        },
-      },
-      disableMobile: true,
-      onChange(selectedDates, dateStr) {
-        state.date = dateStr;
-        state.time = '';
-        btn3.disabled = true;
-        btn3.style.opacity = '.4';
-        fetchSlots(dateStr);
-      },
+  function renderCalendar() {
+    const grid = $('cal-grid');
+    if (!grid) return;
+
+    // Header
+    $('cal-month-name').textContent = MESES[calMonth].toUpperCase();
+    $('cal-year-num').textContent   = calYear;
+
+    // Ocultar flecha anterior si ya estamos en el mes actual
+    const now = new Date();
+    const isPresentMonth = calYear === now.getFullYear() && calMonth === now.getMonth();
+    $('cal-prev').style.opacity = isPresentMonth ? '.25' : '.85';
+    $('cal-prev').style.cursor  = isPresentMonth ? 'not-allowed' : 'pointer';
+
+    const todayKey = dateKey(now);
+
+    grid.innerHTML = '';
+
+    // Cabeceras días de la semana
+    DOWS.forEach(d => {
+      const el = document.createElement('div');
+      el.className   = 'cal-dow';
+      el.textContent = d;
+      grid.appendChild(el);
     });
 
-    // Mover el calendario al contenedor visible
-    const cal = document.querySelector('.flatpickr-calendar');
-    const container = $('date-calendar');
-    if (cal && container && !container.contains(cal)) {
-      container.appendChild(cal);
+    const firstDow    = new Date(calYear, calMonth, 1).getDay();     // 0=Dom
+    const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+    const todayDate   = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    // Celdas vacías antes del día 1
+    for (let i = 0; i < firstDow; i++) {
+      const el = document.createElement('div');
+      el.className = 'cal-cell cal-empty';
+      grid.appendChild(el);
+    }
+
+    // Días del mes
+    for (let day = 1; day <= daysInMonth; day++) {
+      const key      = `${calYear}-${pad(calMonth+1)}-${pad(day)}`;
+      const cellDate = new Date(calYear, calMonth, day);
+      const isPast   = cellDate < todayDate;
+
+      const el = document.createElement('div');
+      el.className   = 'cal-cell';
+      el.textContent = day;
+
+      if (isPast)           el.classList.add('cal-past');
+      if (key === todayKey) el.classList.add('cal-today');
+      if (key === state.date) el.classList.add('cal-selected');
+
+      if (!isPast) {
+        el.addEventListener('click', async () => {
+          state.date = key;
+          state.time = '';
+          const btn3 = $('next-3');
+          btn3.disabled = true;
+          btn3.style.opacity = '.4';
+          renderCalendar();        // re-render para marcar seleccionado
+          await fetchSlots(key);
+        });
+      }
+
+      grid.appendChild(el);
+    }
+
+    // Celdas vacías al final para completar la última fila
+    const totalCells = firstDow + daysInMonth;
+    const remainder  = totalCells % 7;
+    if (remainder !== 0) {
+      for (let i = 0; i < 7 - remainder; i++) {
+        const el = document.createElement('div');
+        el.className = 'cal-cell cal-empty';
+        grid.appendChild(el);
+      }
     }
   }
+
+  function dateKey(d) {
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+  }
+  function pad(n) { return String(n).padStart(2,'0'); }
 
   async function fetchSlots(date) {
     show('slots-wrap');
