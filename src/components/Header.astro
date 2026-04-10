@@ -8,15 +8,15 @@ const links = [
 ];
 ---
 
-<header id="site-header" style="position:fixed;top:0;left:0;right:0;z-index:100;background:#222227;transition:box-shadow .3s;">
+<header id="site-header" style="position:fixed;top:0;left:0;right:0;z-index:100;background:var(--black);transition:box-shadow .3s;">
   <div style="max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:80px;">
 
     <!-- Logo -->
     <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
       <span style="font-family:'Prata',serif;font-size:22px;color:#fff;letter-spacing:3px;text-transform:uppercase;">
-        Book<span style="color:#9e8a78;">Style</span>
+        Book<span style="color:var(--gold);">Style</span>
       </span>
-      <span class="logo-tagline" style="font-family:'Work Sans',sans-serif;font-size:9px;color:#9e8a78;letter-spacing:4px;text-transform:uppercase;margin-top:2px;">
+      <span class="logo-tagline" style="font-family:'Work Sans',sans-serif;font-size:9px;color:var(--gold);letter-spacing:4px;text-transform:uppercase;margin-top:2px;">
         Sistema ERP
       </span>
     </a>
@@ -46,7 +46,7 @@ const links = [
   </div>
 
   <!-- Mobile menu -->
-  <div id="mobile-nav" style="display:none;background:#222227;border-top:1px solid #333;padding:16px 24px 20px;">
+  <div id="mobile-nav" style="display:none;background:var(--black);border-top:1px solid var(--border-mid);padding:16px 24px 20px;">
     {links.map(l => (
       <a href={l.href} class="mob-link"
         style="display:block;padding:12px 0;font-family:'Work Sans',sans-serif;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#ddd;text-decoration:none;border-bottom:1px solid #333;">
