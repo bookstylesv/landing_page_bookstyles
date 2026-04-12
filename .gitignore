@@ -1,0 +1,8 @@
+# Misc
+.DS_Store
+*.log
+
+# Claude Code / IA
+.claude/
+CLAUDE.md
+skills-lock.json
