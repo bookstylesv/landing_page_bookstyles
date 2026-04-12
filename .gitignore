@@ -7,3 +7,5 @@ node_modules/
 .claude/
 CLAUDE.md
 skills-lock.json
+
+.vercel
