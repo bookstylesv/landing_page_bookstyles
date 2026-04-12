@@ -4,3 +4,6 @@ node_modules/
 .env.local
 .vercel
 .astro/
+.claude/
+CLAUDE.md
+skills-lock.json
