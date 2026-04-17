@@ -6,7 +6,30 @@ import Footer from '../components/Footer.astro';
 const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://barber-pro-swart.vercel.app/api/book';
 ---
 
-<Layout title="Agendar Cita — BookStyle" description="Reserva tu cita en el negocio que prefieras. Selecciona el salón o barbería, elige tu servicio y el horario disponible.">
+<Layout
+  title="Agendar Cita — BookStyle"
+  description="Reserva tu cita en el negocio que prefieras. Selecciona el salón o barbería, elige tu servicio y el horario disponible."
+  ogImage="https://bookstyle-landing-seven.vercel.app/og-agendar.jpg"
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Agendar Cita — BookStyle",
+      "description": "Reserva tu cita en barberías y salones registrados en BookStyle. Selecciona negocio, servicio, profesional y horario.",
+      "url": "https://bookstyle-landing-seven.vercel.app/agendar",
+      "provider": {
+        "@type": "Organization",
+        "name": "BookStyle",
+        "url": "https://bookstyle-landing-seven.vercel.app"
+      },
+      "potentialAction": {
+        "@type": "ReserveAction",
+        "target": "https://bookstyle-landing-seven.vercel.app/agendar",
+        "name": "Reservar cita en línea"
+      }
+    })} />
+  </Fragment>
   <Header />
 
   <!-- Hero -->
@@ -43,10 +66,22 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://barber-pro-swart.ve
         ))}
       </div>
 
-      <!-- LOADING -->
-      <div id="wiz-loading" style="text-align:center;padding:80px 24px;">
-        <div style="width:40px;height:40px;border:3px solid #eee;border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 20px;"></div>
-        <p style="font-family:'Work Sans',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#aaa;">Cargando negocios...</p>
+      <!-- LOADING (skeleton cards) -->
+      <div id="wiz-loading" style="display:none;">
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:2px;background:#e0dbd4;">
+          {Array.from({length:6}).map(() => (
+            <div class="skel-card">
+              <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px;">
+                <div class="skel skel-circle"></div>
+                <div style="flex:1;">
+                  <div class="skel skel-line" style="width:70%;height:16px;margin-bottom:8px;"></div>
+                  <div class="skel skel-line" style="width:40%;height:12px;"></div>
+                </div>
+              </div>
+              <div class="skel skel-line" style="width:85%;height:12px;"></div>
+            </div>
+          ))}
+        </div>
       </div>
 
       <!-- ERROR -->
@@ -263,7 +298,43 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://barber-pro-swart.ve
 </Layout>
 
 <style is:global>
-  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes spin    { to { transform: rotate(360deg); } }
+  @keyframes shimmer { to { background-position: -200% 0; } }
+
+  /* ── Skeleton loaders ── */
+  .skel-card {
+    background:#fff;padding:28px 24px;
+  }
+  .skel {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+    border-radius: 2px;
+  }
+  .skel-circle {
+    width:52px;height:52px;border-radius:50%;flex-shrink:0;
+  }
+  .skel-line { display:block; }
+
+  /* ── Tarjeta barbero ── */
+  .barber-card {
+    background:#fff;padding:22px 20px;cursor:pointer;transition:all .2s;
+    position:relative;display:flex;align-items:center;gap:16px;
+  }
+  .barber-card:hover:not(.selected) { background:#faf7f3; }
+  .barber-card.selected { background:var(--black);box-shadow:inset 4px 0 0 var(--gold); }
+  .barber-card.any-barber { border:2px dashed #ddd; }
+  .barber-card.any-barber.selected { border-color:var(--gold); }
+  .barber-card .b-name { font-family:'Prata',serif;font-size:1rem;color:var(--text-dark);transition:color .2s; }
+  .barber-card.selected .b-name { color:#fff; }
+  .barber-card .b-specs { font-family:'Work Sans',sans-serif;font-size:11px;color:#999;margin-top:4px;transition:color .2s; }
+  .barber-card.selected .b-specs { color:#888; }
+  .barber-card .b-check {
+    display:none;position:absolute;top:12px;right:12px;
+    width:22px;height:22px;border-radius:50%;background:var(--gold);
+    align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .barber-card.selected .b-check { display:flex; }
 
   /* ── Responsive wizard ─────────────────────── */
   @media (max-width:640px) { .form-row { grid-template-columns:1fr !important; } }
@@ -468,8 +539,8 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://barber-pro-swart.ve
 
   /* ── Step indicator ─────────────────────────────────── */
   function updateIndicator(step) {
-    // Mapa: paso lógico (0-5) → índice en el indicador de 4 puntos
-    // Pasos 0,1 → índices 0,1; paso 3 (fecha) → índice 2; paso 4 (datos) → índice 3; paso 5 (confirm) → 3
+    // Mapa: paso lógico → índice en indicador de 5 puntos
+    // 0:Negocio, 1:Servicio, 2:Profesional, 3:Fecha, 4:Datos, 5:Confirm
     const stepToIdx = { 0:0, 1:1, 3:2, 4:3, 5:3 };
     const idx = stepToIdx[step] ?? 0;
     const labels = ['00','01','02','03'];
@@ -641,6 +712,96 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://barber-pro-swart.ve
         <div style="font-family:'Prata',serif;font-size:1rem;color:#fff;">${t.name}${t.city ? ` — ${t.city}` : ''}</div>
       </div>
     `;
+  }
+
+  /* ── Paso 2: Barberos ──────────────────────────────────────── */
+  function renderBarbers() {
+    // Copiar banner del tenant
+    const t = state.tenant;
+    if (!t) return;
+    const initial = t.name ? t.name[0].toUpperCase() : 'B';
+    $('tenant-banner-2').innerHTML = `
+      ${t.logoUrl
+        ? `<img src="${t.logoUrl}" alt="${t.name}" style="width:36px;height:36px;object-fit:cover;border-radius:50%;flex-shrink:0;" />`
+        : `<div style="width:36px;height:36px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-family:'Prata',serif;font-size:1rem;color:#fff;">${initial}</span></div>`
+      }
+      <div>
+        <div style="font-family:'Work Sans',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);">Negocio seleccionado</div>
+        <div style="font-family:'Prata',serif;font-size:1rem;color:#fff;">${t.name}${t.city ? ` — ${t.city}` : ''}</div>
+      </div>
+    `;
+
+    const grid = $('barbers-grid');
+    grid.innerHTML = '';
+
+    // Opción "Cualquier disponible" siempre primera
+    const anyCard = document.createElement('div');
+    anyCard.className = 'barber-card any-barber' + (state.barber === null ? ' selected' : '');
+    anyCard.innerHTML = `
+      <div class="b-check">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div style="width:48px;height:48px;border-radius:50%;background:#f0ede8;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      </div>
+      <div>
+        <div class="b-name">Cualquier disponible</div>
+        <div class="b-specs">Asignamos el profesional libre en tu horario</div>
+      </div>
+    `;
+    anyCard.addEventListener('click', () => selectBarber(null, grid));
+    grid.appendChild(anyCard);
+
+    // Tarjeta por cada barbero
+    state.barbers.forEach(b => {
+      const isSelected = state.barber?.id === b.id;
+      const card = document.createElement('div');
+      card.className = 'barber-card' + (isSelected ? ' selected' : '');
+      const specs = Array.isArray(b.specialties) && b.specialties.length > 0
+        ? b.specialties.join(' · ')
+        : 'Estilista profesional';
+      card.innerHTML = `
+        <div class="b-check">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        ${b.avatarUrl
+          ? `<img src="${b.avatarUrl}" alt="${b.name}" style="width:48px;height:48px;object-fit:cover;border-radius:50%;flex-shrink:0;" />`
+          : `<div style="width:48px;height:48px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><span style="font-family:'Prata',serif;font-size:1.1rem;color:#fff;">${b.name?.[0]?.toUpperCase() ?? 'B'}</span></div>`
+        }
+        <div style="min-width:0;">
+          <div class="b-name">${b.name}</div>
+          <div class="b-specs">${specs}</div>
+        </div>
+      `;
+      card.addEventListener('click', () => selectBarber(b, grid));
+      grid.appendChild(card);
+    });
+
+    // Si solo hay "cualquier disponible", activar automáticamente
+    updateBarberNext();
+  }
+
+  function selectBarber(barber, grid) {
+    state.barber = barber;
+    grid.querySelectorAll('.barber-card').forEach(c => c.classList.remove('selected'));
+    // Marcar la card correcta
+    const cards = grid.querySelectorAll('.barber-card');
+    if (!barber) {
+      cards[0].classList.add('selected'); // "Cualquier disponible" es siempre la primera
+    } else {
+      cards.forEach(c => {
+        const nameEl = c.querySelector('.b-name');
+        if (nameEl && nameEl.textContent === barber.name) c.classList.add('selected');
+      });
+    }
+    updateBarberNext();
+  }
+
+  function updateBarberNext() {
+    // El botón siguiente se activa siempre (state.barber === null = cualquier disponible es válido)
+    const btn = $('next-2');
+    btn.disabled = false;
+    btn.style.opacity = '1';
   }
 
   /* ── Paso 1: Servicios (multi-select + búsqueda + categorías) ── */
@@ -984,7 +1145,7 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://barber-pro-swart.ve
         body: JSON.stringify({
           ...(primaryService && { serviceId: primaryService.id }),
           ...(state.servicesSelected.length > 0 && { serviceIds: state.servicesSelected.map(s => s.id) }),
-          barberId:     null,
+          barberId:     state.barber?.id ?? null,
           date:         state.date,
           time:         state.time,
           clientName:   name,
@@ -1050,7 +1211,7 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://barber-pro-swart.ve
   function resetWizard() {
     Object.assign(state, {
       step:0, servicesSelected:[], barber:null, date:'', time:'',
-      tenant:null, services:[], barbers:[], activeCat:'Todos',
+      tenant:null, services:[], barbers:[], activeCat:'Todos', activeType:'ALL',
     });
     ['f-name','f-phone','f-email'].forEach(id => $(id).value = '');
     $('f-notes').value = '';

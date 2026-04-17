@@ -2,10 +2,12 @@
 interface Props {
   title?: string;
   description?: string;
+  ogImage?: string;
 }
 const {
   title = 'BookStyle — ERP para Barberías y Salones',
   description = 'BookStyle es el sistema ERP para barberías y salones: agenda online, caja, inventario, clientes y reportes. Empieza hoy.',
+  ogImage = 'https://bookstyle-landing-seven.vercel.app/og-image.jpg',
 } = Astro.props;
 const canonical = Astro.url.href;
 ---
@@ -15,9 +17,21 @@ const canonical = Astro.url.href;
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content={description} />
-  <meta property="og:title" content={title} />
+  <!-- Open Graph -->
+  <meta property="og:title"       content={title} />
   <meta property="og:description" content={description} />
-  <meta property="og:type" content="website" />
+  <meta property="og:type"        content="website" />
+  <meta property="og:url"         content={canonical} />
+  <meta property="og:image"       content={ogImage} />
+  <meta property="og:image:width"  content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:locale"      content="es_SV" />
+  <meta property="og:site_name"   content="BookStyle" />
+  <!-- Twitter Card -->
+  <meta name="twitter:card"        content="summary_large_image" />
+  <meta name="twitter:title"       content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image"       content={ogImage} />
   <link rel="canonical" href={canonical} />
   <title>{title}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
