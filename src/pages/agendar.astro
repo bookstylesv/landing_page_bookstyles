@@ -119,8 +119,9 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://barber-pro-swart.ve
           </div>
           <div style="display:flex;align-items:center;gap:20px;flex-shrink:0;">
             <div style="text-align:right;">
-              <div style="font-family:'Work Sans',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);">Duración est.</div>
-              <div id="svc-bar-price" style="font-family:'Prata',serif;font-size:1.1rem;color:#fff;"></div>
+              <div style="font-family:'Work Sans',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);">Total est.</div>
+              <div id="svc-bar-total" style="font-family:'Prata',serif;font-size:1.1rem;color:#fff;"></div>
+              <div id="svc-bar-price" style="font-family:'Work Sans',sans-serif;font-size:11px;color:#888;margin-top:1px;"></div>
             </div>
             <div style="display:flex;gap:12px;">
               <button onclick="goTo(0)" style="font-family:'Work Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--gold);background:none;border:1px solid var(--gold);cursor:pointer;padding:10px 16px;">← Atrás</button>
@@ -434,6 +435,8 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://barber-pro-swart.ve
   .svc-card.selected .svc-desc { color:#aaa; }
   .svc-card .svc-dur   { font-family:'Work Sans',sans-serif;font-size:13px;font-weight:600;color:var(--gold);transition:color .2s; }
   .svc-card.selected .svc-dur { color:#888; }
+  .svc-card .svc-price { font-family:'Prata',serif;font-size:1.05rem;color:var(--text-dark);margin-left:auto;transition:color .2s; }
+  .svc-card.selected .svc-price { color:#fff; }
   .svc-card .check-mark {
     position:absolute;top:12px;right:12px;width:22px;height:22px;border-radius:50%;
     background:var(--gold);display:none;align-items:center;justify-content:center;
@@ -699,8 +702,9 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://barber-pro-swart.ve
         <div class="svc-cat">${s.category ?? 'Servicio'}</div>
         <div class="svc-name">${s.name}</div>
         ${s.description ? `<div class="svc-desc">${s.description}</div>` : ''}
-        <div style="display:flex;gap:16px;margin-top:4px;">
+        <div style="display:flex;gap:16px;margin-top:4px;align-items:center;">
           <span class="svc-dur">~${s.duration} min</span>
+          ${s.price > 0 ? `<span class="svc-price">$${Number(s.price).toFixed(2)}</span>` : ''}
         </div>`;
       card.addEventListener('click', () => toggleService(s, card));
       grid.appendChild(card);
@@ -727,9 +731,11 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://barber-pro-swart.ve
     if (count > 0) {
       bar.style.display = 'flex';
       hide('svc-nav-empty');
-      const totalDur = state.servicesSelected.reduce((s, x) => s + (x.duration ?? 30), 0);
-      $('svc-bar-names').textContent = state.servicesSelected.map(x => x.name).join(' · ');
-      $('svc-bar-price').textContent = `~${totalDur} min`;
+      const totalDur   = state.servicesSelected.reduce((s, x) => s + (x.duration ?? 30), 0);
+      const totalPrice = state.servicesSelected.reduce((s, x) => s + (Number(x.price) || 0), 0);
+      $('svc-bar-names').textContent  = state.servicesSelected.map(x => x.name).join(' · ');
+      $('svc-bar-total').textContent  = totalPrice > 0 ? `$${totalPrice.toFixed(2)}` : 'A consultar';
+      $('svc-bar-price').textContent  = `~${totalDur} min`;
     } else {
       bar.style.display = 'none';
       show('svc-nav-empty');
@@ -933,14 +939,18 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://barber-pro-swart.ve
     const svcNames  = state.servicesSelected.length > 0
       ? state.servicesSelected.map(s => s.name).join(', ')
       : 'A definir en el salón';
-    const totalDur  = state.servicesSelected.reduce((a, s) => a + (s.duration ?? 30), 0);
+    const totalDur   = state.servicesSelected.reduce((a, s) => a + (s.duration ?? 30), 0);
+    const totalPrice = state.servicesSelected.reduce((a, s) => a + (Number(s.price) || 0), 0);
     const rows = [
       { l:'Negocio',   v: state.tenant.name },
       { l:'Servicios', v: svcNames },
       { l:'Fecha',     v: `${d}/${m}/${y}` },
       { l:'Hora',      v: state.time },
     ];
-    if (state.servicesSelected.length > 0) rows.push({ l:'Duración estimada', v: `~${totalDur} min` });
+    if (state.servicesSelected.length > 0) {
+      rows.push({ l:'Duración estimada', v: `~${totalDur} min` });
+      if (totalPrice > 0) rows.push({ l:'Total estimado', v: `$${totalPrice.toFixed(2)}` });
+    }
     $('summary-box').innerHTML = rows.map(i => `
       <div>
         <div style="font-family:'Work Sans',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:2px;">${i.l}</div>
@@ -1006,13 +1016,16 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://barber-pro-swart.ve
 
     $('confirm-msg').textContent = `¡${clientName}, tu cita en ${state.tenant.name} ha sido confirmada! Te esperamos el ${dateStr} a las ${timeStr}.`;
 
-    $('confirm-box').innerHTML = [
+    const confirmPrice = state.servicesSelected.reduce((a, s) => a + (Number(s.price) || 0), 0);
+    const confirmRows  = [
       { l:'Negocio',      v: state.tenant.name },
       { l:'Servicios',    v: svcNames },
       { l:'Profesional',  v: data.barberName },
       { l:'Fecha',        v: dateStr },
       { l:'Hora',         v: timeStr },
-    ].map(i => `
+    ];
+    if (confirmPrice > 0) confirmRows.push({ l:'Total estimado', v: `$${confirmPrice.toFixed(2)}` });
+    $('confirm-box').innerHTML = confirmRows.map(i => `
       <div style="padding:10px 0;border-bottom:1px solid #333;">
         <div style="font-family:'Work Sans',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);">${i.l}</div>
         <div style="font-family:'Prata',serif;font-size:1rem;color:#fff;margin-top:2px;">${i.v}</div>
