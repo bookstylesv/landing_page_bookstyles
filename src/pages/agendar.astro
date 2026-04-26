@@ -1181,11 +1181,10 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://barber-pro-swart.ve
 
     const confirmPrice = state.servicesSelected.reduce((a, s) => a + (Number(s.price) || 0), 0);
     const confirmRows  = [
-      { l:'Negocio',      v: state.tenant.name },
-      { l:'Servicios',    v: svcNames },
-      { l:'Profesional',  v: data.barberName },
-      { l:'Fecha',        v: dateStr },
-      { l:'Hora',         v: timeStr },
+      { l:'Negocio',   v: state.tenant.name },
+      { l:'Servicios', v: svcNames },
+      { l:'Fecha',     v: dateStr },
+      { l:'Hora',      v: timeStr },
     ];
     if (confirmPrice > 0) confirmRows.push({ l:'Total estimado', v: `$${confirmPrice.toFixed(2)}` });
     $('confirm-box').innerHTML = confirmRows.map(i => `
@@ -1207,12 +1206,12 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://barber-pro-swart.ve
     }
 
     const gcalTitle   = encodeURIComponent(`Cita en ${state.tenant.name}`);
-    const gcalDetails = encodeURIComponent(`Servicios: ${svcNames}\nProfesional: ${data.barberName}`);
+    const gcalDetails = encodeURIComponent(`Servicios: ${svcNames}`);
     const gcalLoc     = encodeURIComponent(state.tenant.address ?? state.tenant.city ?? '');
     $('btn-gcal').href = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${gcalTitle}&dates=${fmtGCal(dt)}/${fmtGCal(dtEnd)}&details=${gcalDetails}&location=${gcalLoc}`;
 
     // Guardar datos para el .ics
-    window._icsData = { dt, dtEnd, svcNames, barberName: data.barberName };
+    window._icsData = { dt, dtEnd, svcNames };
     window.downloadIcs = function() {
       const pad = n => String(n).padStart(2,'0');
       const fmt = d => `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}T${pad(d.getHours())}${pad(d.getMinutes())}00`;
@@ -1224,7 +1223,7 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://barber-pro-swart.ve
         `DTSTART:${fmt(window._icsData.dt)}`,
         `DTEND:${fmt(window._icsData.dtEnd)}`,
         `SUMMARY:Cita en ${state.tenant.name}`,
-        `DESCRIPTION:Servicios: ${window._icsData.svcNames}\\nProfesional: ${window._icsData.barberName}`,
+        `DESCRIPTION:Servicios: ${window._icsData.svcNames}`,
         `LOCATION:${state.tenant.address ?? state.tenant.city ?? ''}`,
         'BEGIN:VALARM', 'TRIGGER:-PT30M', 'ACTION:DISPLAY', 'DESCRIPTION:Recordatorio de cita', 'END:VALARM',
         'END:VEVENT', 'END:VCALENDAR'
