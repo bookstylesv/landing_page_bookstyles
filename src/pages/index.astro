@@ -307,7 +307,7 @@ import Footer from '../components/Footer.astro';
       <div class="price-cards-wrap" style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-bottom:48px;text-align:left;max-width:1040px;margin-left:auto;margin-right:auto;">
 
         <!-- BÁSICO -->
-        <div style="background:var(--black-soft);padding:44px 32px;position:relative;" data-aos="fade-up" data-aos-delay="0">
+        <div class="pricing-plan-card" data-plan-card data-selected="false" tabindex="0" aria-label="Seleccionar plan Básico" style="background:var(--black-soft);padding:44px 32px;position:relative;" data-aos="fade-up" data-aos-delay="0">
           <div style="font-family:'Work Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:10px;">Básico</div>
           <div style="display:flex;align-items:flex-end;gap:4px;margin-bottom:4px;">
             <span class="plan-price-value" data-monthly="$40" data-annual="$408" style="font-family:'Prata',serif;font-size:2.4rem;color:#fff;">$40</span>
@@ -327,8 +327,8 @@ import Footer from '../components/Footer.astro';
         </div>
 
         <!-- PROFESIONAL -->
-        <div style="background:var(--gold);padding:44px 32px;position:relative;" data-aos="fade-up" data-aos-delay="150">
-          <div style="position:absolute;top:0;left:0;right:0;background:var(--gold-dark);text-align:center;padding:7px;font-family:'Work Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#fff;">Más popular</div>
+        <div class="pricing-plan-card selected" data-plan-card data-selected="true" tabindex="0" aria-label="Seleccionar plan Profesional" style="background:var(--gold);padding:44px 32px;position:relative;" data-aos="fade-up" data-aos-delay="150">
+          <div class="plan-ribbon" style="position:absolute;top:0;left:0;right:0;background:var(--gold-dark);text-align:center;padding:7px;font-family:'Work Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#fff;">Más popular</div>
           <div style="padding-top:28px;">
             <div style="font-family:'Work Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:10px;">Profesional</div>
             <div style="display:flex;align-items:flex-end;gap:4px;margin-bottom:4px;">
@@ -350,8 +350,8 @@ import Footer from '../components/Footer.astro';
         </div>
 
         <!-- ENTERPRISE -->
-        <div style="background:var(--black-rich);padding:44px 32px;position:relative;border-top:2px solid var(--gold);" data-aos="fade-up" data-aos-delay="300">
-          <div style="position:absolute;top:0;left:0;right:0;background:var(--gold);text-align:center;padding:7px;font-family:'Work Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#fff;">Todo incluido</div>
+        <div class="pricing-plan-card" data-plan-card data-selected="false" tabindex="0" aria-label="Seleccionar plan Enterprise" style="background:var(--black-rich);padding:44px 32px;position:relative;border-top:2px solid var(--gold);" data-aos="fade-up" data-aos-delay="300">
+          <div class="plan-ribbon" style="position:absolute;top:0;left:0;right:0;background:var(--gold);text-align:center;padding:7px;font-family:'Work Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#fff;">Todo incluido</div>
           <div style="padding-top:28px;">
             <div style="font-family:'Work Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:10px;">Enterprise</div>
             <div style="display:flex;align-items:flex-end;gap:4px;margin-bottom:4px;">
@@ -672,6 +672,66 @@ import Footer from '../components/Footer.astro';
     color: rgba(255,255,255,.9);
   }
 
+  .pricing-plan-card {
+    --pricing-selected: #df8ea3;
+    --pricing-selected-strong: #cf7189;
+    background: var(--black-soft) !important;
+    cursor: pointer;
+    isolation: isolate;
+    transition: background .25s ease, border-color .25s ease, transform .25s ease, box-shadow .25s ease;
+  }
+  .pricing-plan-card:nth-child(3) {
+    background: var(--black-rich) !important;
+  }
+  .pricing-plan-card:hover,
+  .pricing-plan-card:focus-visible {
+    transform: translateY(-3px);
+  }
+  .pricing-plan-card:focus-visible {
+    outline: 2px solid rgba(255,255,255,.75);
+    outline-offset: 4px;
+  }
+  .pricing-plan-card.selected {
+    background: var(--pricing-selected) !important;
+    border-color: var(--pricing-selected) !important;
+    box-shadow: 0 24px 60px rgba(223,142,163,.18);
+  }
+  .pricing-plan-card .plan-ribbon {
+    background: #18181d !important;
+    color: rgba(255,255,255,.7) !important;
+  }
+  .pricing-plan-card.selected .plan-ribbon {
+    background: var(--pricing-selected-strong) !important;
+    color: #fff !important;
+  }
+  .pricing-plan-card:not(.selected) .annual-saving-light {
+    color: var(--pricing-selected);
+  }
+  .pricing-plan-card.selected .annual-saving {
+    color: #fff;
+  }
+  .pricing-plan-card:not(.selected) svg {
+    stroke: var(--pricing-selected) !important;
+  }
+  .pricing-plan-card.selected svg {
+    stroke: #fff !important;
+  }
+  .pricing-plan-card:not(.selected) .btn-gold {
+    background: transparent !important;
+    color: #fff !important;
+    border: 2px solid rgba(255,255,255,.25) !important;
+  }
+  .pricing-plan-card.selected .btn-outline,
+  .pricing-plan-card.selected .btn-gold {
+    background: #fff !important;
+    color: #0a0a0a !important;
+    border-color: #fff !important;
+  }
+  .pricing-plan-card.selected .btn-outline:hover,
+  .pricing-plan-card.selected .btn-gold:hover {
+    color: #0a0a0a !important;
+  }
+
   @media (max-width: 860px) {
     .price-cards-wrap { grid-template-columns: 1fr !important; max-width: 420px !important; }
   }
@@ -754,6 +814,29 @@ import Footer from '../components/Footer.astro';
     button.addEventListener('click', () => {
       const mode = ((button as HTMLElement).dataset.billing || 'monthly') as 'monthly' | 'annual';
       setBillingMode(mode);
+    });
+  });
+
+  const pricingPlanCards = document.querySelectorAll('[data-plan-card]');
+
+  function selectPricingPlanCard(activeCard: Element) {
+    pricingPlanCards.forEach((card) => {
+      const isActive = card === activeCard;
+      card.classList.toggle('selected', isActive);
+      (card as HTMLElement).dataset.selected = String(isActive);
+    });
+  }
+
+  pricingPlanCards.forEach((card) => {
+    card.addEventListener('pointerenter', () => selectPricingPlanCard(card));
+    card.addEventListener('click', () => selectPricingPlanCard(card));
+    card.addEventListener('focus', () => selectPricingPlanCard(card));
+    card.addEventListener('keydown', (event) => {
+      const keyboardEvent = event as KeyboardEvent;
+      if (keyboardEvent.key === 'Enter' || keyboardEvent.key === ' ') {
+        keyboardEvent.preventDefault();
+        selectPricingPlanCard(card);
+      }
     });
   });
 
