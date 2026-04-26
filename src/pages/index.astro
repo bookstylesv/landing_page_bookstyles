@@ -296,15 +296,24 @@ import Footer from '../components/Footer.astro';
         Planes adaptados al tamaño de tu negocio. Sin contratos largos. Sin letra pequeña.
       </p>
 
+      <div class="billing-toggle" role="group" aria-label="Tipo de facturacion" data-aos="fade-up" data-aos-delay="220">
+        <button type="button" class="billing-toggle-btn active" data-billing="monthly" aria-pressed="true">Mensual</button>
+        <button type="button" class="billing-toggle-btn" data-billing="annual" aria-pressed="false">Anual</button>
+      </div>
+      <p id="billing-note" class="billing-note" data-monthly="Cambia a anual y ahorra entre 15% y 20%." data-annual="Plan anual con ahorro entre 15% y 20% frente al pago mensual.">
+        Cambia a anual y ahorra entre 15% y 20%.
+      </p>
+
       <div class="price-cards-wrap" style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-bottom:48px;text-align:left;max-width:1040px;margin-left:auto;margin-right:auto;">
 
         <!-- BÁSICO -->
         <div style="background:var(--black-soft);padding:44px 32px;position:relative;" data-aos="fade-up" data-aos-delay="0">
           <div style="font-family:'Work Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:10px;">Básico</div>
           <div style="display:flex;align-items:flex-end;gap:4px;margin-bottom:4px;">
-            <span style="font-family:'Prata',serif;font-size:2.4rem;color:#fff;">$40</span>
-            <span style="font-size:13px;color:rgba(255,255,255,.45);margin-bottom:8px;">/mes</span>
+            <span class="plan-price-value" data-monthly="$40" data-annual="$408" style="font-family:'Prata',serif;font-size:2.4rem;color:#fff;">$40</span>
+            <span class="plan-price-period" data-monthly="/mes" data-annual="/año" style="font-size:13px;color:rgba(255,255,255,.45);margin-bottom:8px;">/mes</span>
           </div>
+          <div class="annual-saving" data-monthly="Plan anual disponible" data-annual="Ahorra 15% pagando anual">Plan anual disponible</div>
           <div style="font-size:13px;color:rgba(255,255,255,.5);margin-bottom:28px;padding-bottom:24px;border-bottom:1px solid rgba(255,255,255,.08);">Para negocios que arrancan</div>
           <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:32px;">
             {['1 barbería / salón','Hasta 3 profesionales','Agenda online','Control de caja básico','Gestión de clientes','Soporte por WhatsApp'].map(item => (
@@ -323,9 +332,10 @@ import Footer from '../components/Footer.astro';
           <div style="padding-top:28px;">
             <div style="font-family:'Work Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:10px;">Profesional</div>
             <div style="display:flex;align-items:flex-end;gap:4px;margin-bottom:4px;">
-              <span style="font-family:'Prata',serif;font-size:2.4rem;color:#fff;">$75</span>
-              <span style="font-size:13px;color:rgba(255,255,255,.55);margin-bottom:8px;">/mes</span>
+              <span class="plan-price-value" data-monthly="$75" data-annual="$720" style="font-family:'Prata',serif;font-size:2.4rem;color:#fff;">$75</span>
+              <span class="plan-price-period" data-monthly="/mes" data-annual="/año" style="font-size:13px;color:rgba(255,255,255,.55);margin-bottom:8px;">/mes</span>
             </div>
+            <div class="annual-saving annual-saving-light" data-monthly="Plan anual disponible" data-annual="Ahorra 20% pagando anual">Plan anual disponible</div>
             <div style="font-size:13px;color:rgba(255,255,255,.6);margin-bottom:28px;padding-bottom:24px;border-bottom:1px solid rgba(255,255,255,.15);">Para negocios en crecimiento</div>
             <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:32px;">
               {['Hasta 3 barberías / salones','Profesionales ilimitados','Todo lo del plan Básico','Inventario & Compras','Reportes & Analytics','Gestión de equipo'].map(item => (
@@ -345,9 +355,10 @@ import Footer from '../components/Footer.astro';
           <div style="padding-top:28px;">
             <div style="font-family:'Work Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:10px;">Enterprise</div>
             <div style="display:flex;align-items:flex-end;gap:4px;margin-bottom:4px;">
-              <span style="font-family:'Prata',serif;font-size:2.4rem;color:#fff;">$120</span>
-              <span style="font-size:13px;color:rgba(255,255,255,.45);margin-bottom:8px;">/mes</span>
+              <span class="plan-price-value" data-monthly="$120" data-annual="$1,152" style="font-family:'Prata',serif;font-size:2.4rem;color:#fff;">$120</span>
+              <span class="plan-price-period" data-monthly="/mes" data-annual="/año" style="font-size:13px;color:rgba(255,255,255,.45);margin-bottom:8px;">/mes</span>
             </div>
+            <div class="annual-saving" data-monthly="Plan anual disponible" data-annual="Ahorra 20% pagando anual">Plan anual disponible</div>
             <div style="font-size:13px;color:rgba(255,255,255,.5);margin-bottom:28px;padding-bottom:24px;border-bottom:1px solid rgba(255,255,255,.08);">Para cadenas y franquicias</div>
             <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:32px;">
               {['Hasta 10 barberías / salones','Todo lo del plan Profesional','Todos los módulos habilitados','Acceso prioritario a soporte','Configuración personalizada','Capacitación incluida'].map(item => (
@@ -615,6 +626,52 @@ import Footer from '../components/Footer.astro';
   }
 
   /* ── Precios cards ── */
+  .billing-toggle {
+    width: fit-content;
+    margin: -24px auto 12px;
+    padding: 4px;
+    display: flex;
+    gap: 4px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.12);
+  }
+  .billing-toggle-btn {
+    height: 38px;
+    min-width: 96px;
+    border: 0;
+    background: transparent;
+    color: rgba(255,255,255,.58);
+    font-family: 'Work Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .billing-toggle-btn.active {
+    background: var(--gold);
+    color: #fff;
+  }
+  .billing-note {
+    min-height: 20px;
+    margin: 0 0 28px;
+    font-size: 13px;
+    color: rgba(255,255,255,.58);
+  }
+  .annual-saving {
+    min-height: 20px;
+    margin-bottom: 22px;
+    font-family: 'Work Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .annual-saving-light {
+    color: rgba(255,255,255,.9);
+  }
+
   @media (max-width: 860px) {
     .price-cards-wrap { grid-template-columns: 1fr !important; max-width: 420px !important; }
   }
@@ -672,6 +729,33 @@ import Footer from '../components/Footer.astro';
 <script>
   /* ── Formulario lead → WhatsApp ── */
   const BOOKSTYLE_WA = '50366774865';
+
+  const billingButtons = document.querySelectorAll('.billing-toggle-btn');
+  const billingNote = document.getElementById('billing-note') as HTMLElement | null;
+
+  function setBillingMode(mode: 'monthly' | 'annual') {
+    billingButtons.forEach((button) => {
+      const isActive = (button as HTMLElement).dataset.billing === mode;
+      button.classList.toggle('active', isActive);
+      button.setAttribute('aria-pressed', String(isActive));
+    });
+
+    document.querySelectorAll('.plan-price-value, .plan-price-period, .annual-saving').forEach((element) => {
+      const value = (element as HTMLElement).dataset[mode];
+      if (value) element.textContent = value;
+    });
+
+    if (billingNote) {
+      billingNote.textContent = billingNote.dataset[mode] || '';
+    }
+  }
+
+  billingButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const mode = ((button as HTMLElement).dataset.billing || 'monthly') as 'monthly' | 'annual';
+      setBillingMode(mode);
+    });
+  });
 
   document.getElementById('demo-form')?.addEventListener('submit', function(e) {
     e.preventDefault();
