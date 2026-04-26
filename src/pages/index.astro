@@ -694,28 +694,34 @@ import Footer from '../components/Footer.astro';
   .pricing-plan-card.selected {
     background: var(--pricing-selected) !important;
     border-color: var(--pricing-selected) !important;
-    box-shadow: 0 24px 60px rgba(242,200,213,.22);
+    box-shadow: 0 24px 60px rgba(242,200,213,.30);
   }
+  /* Todo el texto oscuro sobre fondo rosa pálido */
+  .pricing-plan-card.selected * {
+    color: #2d1522 !important;
+    border-color: rgba(45,21,34,.12) !important;
+  }
+  /* Ribbon con fondo oscuro y texto blanco */
   .pricing-plan-card .plan-ribbon {
     background: #18181d !important;
     color: rgba(255,255,255,.7) !important;
   }
   .pricing-plan-card.selected .plan-ribbon {
-    background: var(--pricing-selected-strong) !important;
-    color: #fff !important;
+    background: #2d1522 !important;
+    color: #f2c8d5 !important;
   }
-  .pricing-plan-card:not(.selected) .annual-saving-light {
-    color: var(--pricing-selected);
+  .pricing-plan-card.selected .plan-ribbon * {
+    color: #f2c8d5 !important;
+    border-color: transparent !important;
   }
-  .pricing-plan-card.selected .annual-saving {
-    color: #fff;
-  }
+  /* SVG checkmark oscuro */
   .pricing-plan-card:not(.selected) svg {
     stroke: var(--pricing-selected) !important;
   }
   .pricing-plan-card.selected svg {
-    stroke: #fff !important;
+    stroke: #2d1522 !important;
   }
+  /* Botón oscuro con texto claro */
   .pricing-plan-card:not(.selected) .btn-gold {
     background: transparent !important;
     color: #fff !important;
@@ -723,13 +729,21 @@ import Footer from '../components/Footer.astro';
   }
   .pricing-plan-card.selected .btn-outline,
   .pricing-plan-card.selected .btn-gold {
-    background: #fff !important;
-    color: #0a0a0a !important;
-    border-color: #fff !important;
+    background: #2d1522 !important;
+    color: #f2c8d5 !important;
+    border-color: #2d1522 !important;
+  }
+  .pricing-plan-card.selected .btn-outline *,
+  .pricing-plan-card.selected .btn-gold * {
+    color: #f2c8d5 !important;
   }
   .pricing-plan-card.selected .btn-outline:hover,
   .pricing-plan-card.selected .btn-gold:hover {
-    color: #0a0a0a !important;
+    background: #1a0c14 !important;
+  }
+  /* Texto muted ligeramente más claro */
+  .pricing-plan-card:not(.selected) .annual-saving-light {
+    color: var(--pricing-selected);
   }
 
   @media (max-width: 860px) {
