@@ -864,8 +864,7 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://barber-pro-swart.ve
         <div class="svc-name">${s.name}</div>
         ${s.description ? `<div class="svc-desc">${s.description}</div>` : ''}
         <div style="display:flex;gap:16px;margin-top:4px;align-items:center;">
-          <span class="svc-dur">~${s.duration} min</span>
-          ${s.price > 0 ? `<span class="svc-price">$${Number(s.price).toFixed(2)}</span>` : ''}
+          <span class="svc-dur">${s.price > 0 ? `$${Number(s.price).toFixed(2)}` : 'A consultar'}</span>
         </div>`;
       card.addEventListener('click', () => toggleService(s, card));
       grid.appendChild(card);
