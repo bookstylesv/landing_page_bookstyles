@@ -437,6 +437,8 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://barber-pro-swart.ve
   .cal-cell:last-child,.cal-cell:nth-child(7n) { border-right:none; }
   .cal-cell.cal-empty  { background:#fafafa;cursor:default; }
   .cal-cell.cal-past   { color:#ccc;background:#fafafa;cursor:not-allowed; }
+  .cal-cell.cal-closed { color:#ddd;background:#f5f0eb;cursor:not-allowed;position:relative; }
+  .cal-cell.cal-closed::after { content:'✕';position:absolute;bottom:4px;right:4px;font-size:8px;color:#d4b9a0;line-height:1; }
   .cal-cell.cal-other  { color:#ccc; }
   .cal-cell.cal-today:not(.cal-past) { font-weight:800;color:var(--gold); }
   .cal-cell.cal-today:not(.cal-past)::after {
@@ -540,6 +542,7 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://barber-pro-swart.ve
     services:         [],
     barbers:          [],
     tenant:           null,
+    businessHours:    [],   // [{ dayOfWeek, active, startTime, endTime }]
     servicesSelected: [],   // array de objetos servicio
     barber:           null,
     date:             '',
@@ -684,8 +687,9 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://barber-pro-swart.ve
           const res = await fetch(`${API_BASE}/${t.slug}`, { cache: 'no-store' });
           if (!res.ok) throw new Error();
           const data = await res.json();
-          state.services = data.services ?? [];
-          state.barbers  = data.barbers  ?? [];
+          state.services      = data.services      ?? [];
+          state.barbers       = data.barbers       ?? [];
+          state.businessHours = data.businessHours ?? [];
           state.servicesSelected = [];
           btn.disabled = false;
           btn.style.opacity = '1';
@@ -1002,16 +1006,20 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://barber-pro-swart.ve
       const key      = `${calYear}-${pad(calMonth+1)}-${pad(day)}`;
       const cellDate = new Date(calYear, calMonth, day);
       const isPast   = cellDate < todayDate;
+      const dow      = cellDate.getDay(); // 0=Dom,1=Lun...
+      const bh       = state.businessHours.find(h => h.dayOfWeek === dow);
+      const isClosed = state.businessHours.length > 0 && bh && !bh.active;
 
       const el = document.createElement('div');
       el.className   = 'cal-cell';
       el.textContent = day;
 
-      if (isPast)           el.classList.add('cal-past');
+      if (isPast || isClosed) el.classList.add('cal-past');
+      if (isClosed && !isPast) el.classList.add('cal-closed');
       if (key === todayKey) el.classList.add('cal-today');
       if (key === state.date) el.classList.add('cal-selected');
 
-      if (!isPast) {
+      if (!isPast && !isClosed) {
         el.addEventListener('click', async () => {
           state.date = key;
           state.time = '';
@@ -1264,7 +1272,7 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://barber-pro-swart.ve
   function resetWizard() {
     Object.assign(state, {
       step:0, servicesSelected:[], barber:null, date:'', time:'',
-      tenant:null, services:[], barbers:[], activeCat:'Todos', activeType:'ALL',
+      tenant:null, services:[], barbers:[], businessHours:[], activeCat:'Todos', activeType:'ALL',
     });
     ['f-name','f-phone','f-email'].forEach(id => $(id).value = '');
     $('f-notes').value = '';
