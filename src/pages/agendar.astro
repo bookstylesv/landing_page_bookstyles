@@ -118,8 +118,20 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://barber-pro-swart.ve
         </div>
         <div id="tenants-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:2px;background:#e0dbd4;"></div>
 
-        <div style="margin-top:32px;text-align:right;">
-          <button id="next-0" onclick="goTo(1)" disabled class="btn-gold" style="border:none;cursor:pointer;opacity:.4;"><span>Siguiente →</span></button>
+        <!-- Barra sticky negocio -->
+        <div id="tenant-bar" style="display:none;position:sticky;bottom:0;left:0;right:0;background:var(--black);padding:16px 24px;z-index:50;box-shadow:0 -4px 24px rgba(0,0,0,.18);align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+          <div>
+            <div style="font-family:'Work Sans',sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:2px;">Negocio seleccionado</div>
+            <div id="tenant-bar-name" style="font-family:'Prata',serif;font-size:.95rem;color:#fff;max-width:480px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></div>
+          </div>
+          <div style="display:flex;gap:12px;flex-shrink:0;">
+            <button id="next-0" onclick="goTo(1)" disabled class="btn-gold" style="border:none;cursor:pointer;opacity:.4;"><span>Siguiente →</span></button>
+          </div>
+        </div>
+
+        <!-- Nav cuando no hay selección -->
+        <div id="tenant-nav-empty" style="margin-top:32px;display:flex;justify-content:flex-end;padding-top:16px;">
+          <span style="font-family:'Work Sans',sans-serif;font-size:12px;color:#aaa;align-self:center;">Selecciona un negocio para continuar</span>
         </div>
       </div>
 
@@ -359,6 +371,10 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://barber-pro-swart.ve
     #services-bar { flex-direction:column !important; align-items:flex-start !important; padding:12px 16px !important; gap:10px !important; }
     #svc-bar-names { max-width:100% !important; font-size:.85rem !important; }
     #services-bar > div:last-child { width:100%; justify-content:space-between !important; }
+    #tenant-bar { flex-direction:column !important; align-items:flex-start !important; padding:12px 16px !important; gap:10px !important; }
+    #tenant-bar-name { max-width:100% !important; font-size:.85rem !important; }
+    #tenant-bar > div:last-child { width:100%; }
+    #tenant-bar > div:last-child button { width:100%; }
   }
 
   /* Summary box a 1 columna en móvil */
@@ -660,6 +676,9 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://barber-pro-swart.ve
         btn.disabled = true;
         btn.style.opacity = '.4';
         btn.querySelector('span').textContent = 'Cargando...';
+        $('tenant-bar').style.display = 'flex';
+        $('tenant-bar-name').textContent = t.name + (t.city ? ` — ${t.city}` : '');
+        hide('tenant-nav-empty');
 
         try {
           const res = await fetch(`${API_BASE}/${t.slug}`, { cache: 'no-store' });
@@ -675,6 +694,8 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://barber-pro-swart.ve
           card.classList.remove('selected');
           state.tenant = null;
           btn.querySelector('span').textContent = 'Siguiente →';
+          $('tenant-bar').style.display = 'none';
+          show('tenant-nav-empty');
           alert('No se pudo cargar la información de este negocio. Intenta de nuevo.');
         }
       });
@@ -1253,6 +1274,8 @@ const API_BASE = import.meta.env.PUBLIC_API_BASE ?? 'https://barber-pro-swart.ve
     btn.style.opacity = '.4';
     btn.querySelector('span').textContent = 'Siguiente →';
     $('search-tenant') && ($('search-tenant').value = '');
+    $('tenant-bar').style.display = 'none';
+    show('tenant-nav-empty');
     renderTenants();
     goTo(0);
   }
